@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\SalesQuery;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreSalesQueryRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return $this->user()->hasAnyRole(['super-admin', 'manager', 'employee']);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'query_date' => ['required', 'date'],
+            'query_title' => ['nullable', 'string', 'max:255'],
+            'service_type' => ['required', Rule::in(SalesQuery::SERVICE_TYPES)],
+            'service_type_other' => ['nullable', 'string', 'max:255'],
+            'client_name' => ['required', 'string', 'max:255'],
+            'company_name' => ['nullable', 'string', 'max:255'],
+            'mobile' => ['required', 'string', 'max:30'],
+            'alternate_mobile' => ['nullable', 'string', 'max:30'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'destination' => ['nullable', 'string', 'max:255'],
+            'travel_date' => ['nullable', 'date'],
+            'travel_month' => ['nullable', 'date_format:Y-m'],
+            'number_of_pax' => ['nullable', 'integer', 'min:1'],
+            'source' => ['required', Rule::in(SalesQuery::SOURCES)],
+            'priority' => ['required', Rule::in(SalesQuery::PRIORITIES)],
+            'assigned_to' => ['nullable', 'exists:users,id'],
+            'stage' => ['required', Rule::in(SalesQuery::STAGES)],
+            'status' => ['required', Rule::in(['Open', 'Confirmed', 'Lost', 'Cancelled'])],
+            'expected_sale_amount' => ['nullable', 'numeric', 'min:0'],
+            'next_followup_date' => ['nullable', 'required_if:stage,Follow Up,Pricing Shared,Negotiation', 'date'],
+            'lost_reason' => ['nullable', 'required_if:status,Lost', Rule::in(SalesQuery::LOST_REASONS)],
+            'latest_remark' => ['nullable', 'string', 'max:5000'],
+            'duplicate_confirmed' => ['nullable', 'boolean'],
+        ];
+    }
+}
