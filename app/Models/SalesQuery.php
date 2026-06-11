@@ -86,7 +86,6 @@ class SalesQuery extends Model
         'assigned_to',
         'stage',
         'status',
-        'expected_sale_amount',
         'last_followup_date',
         'next_followup_date',
         'lost_reason',
@@ -101,7 +100,6 @@ class SalesQuery extends Model
         'travel_date' => 'date',
         'last_followup_date' => 'date',
         'next_followup_date' => 'date',
-        'expected_sale_amount' => 'decimal:2',
     ];
 
     protected static function booted(): void

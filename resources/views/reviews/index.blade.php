@@ -1,14 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.admin')
+
+@section('title', 'Review Center')
+@section('page-header', 'Review & Approval Center')
+@section('page-description', 'Manage pending operational and finance approvals.')
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 text-gray-800 mb-0">Review & Approval Center</h1>
-            <p class="text-muted mb-0">Manage pending operational and finance approvals.</p>
-        </div>
-    </div>
-
+<div>
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -151,7 +148,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const modals = document.querySelectorAll('.modal');
@@ -180,4 +177,4 @@
         });
     });
 </script>
-@endsection
+@endpush

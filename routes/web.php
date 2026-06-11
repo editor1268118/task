@@ -109,7 +109,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('queries/{query}/quick-status', [QueryController::class, 'quickStatus'])->name('queries.quick-status');
             Route::post('queries/{query}/reassign', [QueryController::class, 'reassign'])->name('queries.reassign');
             Route::post('queries/{query}/convert', [QueryController::class, 'convert'])->name('queries.convert');
-            Route::resource('queries', QueryController::class)->except(['destroy']);
+            Route::resource('queries', QueryController::class);
         });
 
     // ─── Unified Task Management Routes ────────────────────────────

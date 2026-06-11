@@ -14,7 +14,7 @@
     <h2>Query Register</h2>
     <p>Generated: {{ now()->timezone(config('app.display_timezone'))->format('d M Y h:i A') }}</p>
     <table>
-        <thead><tr><th>Query No</th><th>Date</th><th>Service</th><th>Client</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Assigned To</th><th>Stage</th><th>Status</th><th>Expected Sale</th><th>Age</th></tr></thead>
+        <thead><tr><th>Query No</th><th>Date</th><th>Service</th><th>Client</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Assigned To</th><th>Stage</th><th>Status</th><th>Age</th></tr></thead>
         <tbody>
             @foreach($queries as $query)
                 <tr>
@@ -28,7 +28,6 @@
                     <td>{{ $query->assignedTo?->name }}</td>
                     <td>{{ $query->stage }}</td>
                     <td>{{ $query->status }}</td>
-                    <td>{{ $query->expected_sale_amount }}</td>
                     <td>{{ $query->age_days }} days</td>
                 </tr>
             @endforeach

@@ -121,7 +121,7 @@ class QueryManagementService
     public function update(SalesQuery $query, array $data, User $user): SalesQuery
     {
         return DB::transaction(function () use ($query, $data, $user) {
-            $old = $query->only(['assigned_to', 'stage', 'status', 'expected_sale_amount']);
+            $old = $query->only(['assigned_to', 'stage', 'status']);
 
             $data['updated_by'] = $user->id;
             $data['travel_month'] = $this->travelMonth($data, $query);
@@ -149,13 +149,6 @@ class QueryManagementService
                     'new_status' => $query->status,
                 ]);
                 $this->systemNotificationService->queryStatusChanged($query->fresh(['assignedTo', 'assignedBy']), $user, $old['status'], $query->status);
-            }
-
-            if ((string) ($old['expected_sale_amount'] ?? '') !== (string) $query->expected_sale_amount) {
-                $this->log($query, $user, 'Expected Sale Updated', 'Expected sale amount updated.', [
-                    'old_expected_sale_amount' => $old['expected_sale_amount'],
-                    'new_expected_sale_amount' => $query->expected_sale_amount,
-                ]);
             }
 
             return $query->fresh(['assignedBy', 'assignedTo']);
@@ -324,7 +317,6 @@ class QueryManagementService
                     'destination' => $query->destination,
                     'travel_month' => $query->travel_month,
                     'number_of_pax' => $query->number_of_pax,
-                    'expected_sale_amount' => $query->expected_sale_amount,
                 ]),
             ], $user);
 
@@ -374,7 +366,6 @@ class QueryManagementService
             'lost_queries' => (clone $query)->where('status', 'Lost')->count(),
             'converted_queries' => $converted,
             'conversion_rate' => $total > 0 ? round(($converted / $total) * 100, 2) : 0,
-            'expected_revenue' => (clone $query)->sum('expected_sale_amount'),
             'by_service_type' => (clone $query)->select('service_type')->selectRaw('count(*) as count')->groupBy('service_type')->pluck('count', 'service_type'),
             'by_source' => (clone $query)->select('source')->selectRaw('count(*) as count')->groupBy('source')->pluck('count', 'source'),
             'by_employee' => (clone $query)->with('assignedTo')->get()->groupBy(fn ($q) => $q->assignedTo?->name ?? 'Unassigned')->map->count(),

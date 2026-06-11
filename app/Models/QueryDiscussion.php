@@ -47,7 +47,6 @@ class QueryDiscussion extends Model
 
     public function canBeManagedBy(User $user): bool
     {
-        return $user->hasAnyRole(['super-admin', 'manager'])
-            || $this->created_by === $user->id;
+        return $user->hasRole('super-admin');
     }
 }

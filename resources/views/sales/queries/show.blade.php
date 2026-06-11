@@ -80,7 +80,6 @@
                                 'Destination' => $query->destination ?? '-',
                                 'Travel Date' => $query->travel_date?->format('d M Y') ?? '-',
                                 'Pax' => $query->number_of_pax ?? '-',
-                                'Expected Sale' => $query->expected_sale_amount ? 'INR '.number_format((float) $query->expected_sale_amount, 2) : '-',
                                 'Age' => $query->age_days.' days',
                             ] as $label => $value)
                                 <div class="col-md-4">
@@ -242,7 +241,6 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-2"><span>Status</span><strong>{{ $query->status }}</strong></div>
                 <div class="d-flex justify-content-between mb-2"><span>Stage</span><strong>{{ $query->stage }}</strong></div>
-                <div class="d-flex justify-content-between mb-2"><span>Expected Sale</span><strong>{{ $query->expected_sale_amount ? 'INR '.number_format((float) $query->expected_sale_amount, 2) : '-' }}</strong></div>
                 <div class="d-flex justify-content-between mb-2"><span>Assigned To</span><strong>{{ $query->assignedTo?->name ?? 'Unassigned' }}</strong></div>
                 <div class="d-flex justify-content-between"><span>Next Follow-Up</span><strong>{{ $query->next_followup_date?->format('d M Y') ?? '-' }}</strong></div>
             </div>

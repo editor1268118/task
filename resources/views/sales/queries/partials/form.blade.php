@@ -21,8 +21,8 @@
         @error('query_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
-        <label class="form-label">Query Details</label>
-        <input name="query_title" class="form-control @error('query_title') is-invalid @enderror" value="{{ old('query_title', $queryModel?->query_title) }}" placeholder="e.g. Goa family package for 4 pax">
+        <label class="form-label">Query Details <span class="text-danger">*</span></label>
+        <input name="query_title" class="form-control @error('query_title') is-invalid @enderror" value="{{ old('query_title', $queryModel?->query_title) }}" placeholder="e.g. Goa family package for 4 pax" required>
         @error('query_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
@@ -72,8 +72,9 @@
         <input type="date" name="travel_date" class="form-control" value="{{ old('travel_date', $queryModel?->travel_date?->format('Y-m-d')) }}">
     </div>
     <div class="col-md-2">
-        <label class="form-label">Pax</label>
-        <input type="number" min="1" name="number_of_pax" class="form-control" value="{{ old('number_of_pax', $queryModel?->number_of_pax) }}">
+        <label class="form-label">Pax <span class="text-danger">*</span></label>
+        <input type="number" min="1" name="number_of_pax" class="form-control @error('number_of_pax') is-invalid @enderror" value="{{ old('number_of_pax', $queryModel?->number_of_pax) }}" required>
+        @error('number_of_pax')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
         <label class="form-label">Source <span class="text-danger">*</span></label>
@@ -85,13 +86,14 @@
         </select>
     </div>
     <div class="col-md-3">
-        <label class="form-label">Assigned To</label>
-        <select name="assigned_to" class="form-select">
-            <option value="">Unassigned</option>
+        <label class="form-label">Assigned To <span class="text-danger">*</span></label>
+        <select name="assigned_to" class="form-select @error('assigned_to') is-invalid @enderror" required>
+            <option value="">Select employee</option>
             @foreach($employees as $employee)
                 <option value="{{ $employee->id }}" {{ old('assigned_to', $queryModel?->assigned_to) == $employee->id ? 'selected' : '' }}>{{ $employee->name }}</option>
             @endforeach
         </select>
+        @error('assigned_to')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-2">
         <label class="form-label">Stage <span class="text-danger">*</span></label>

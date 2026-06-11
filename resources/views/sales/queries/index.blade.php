@@ -71,7 +71,7 @@
 
     .query-register-table {
         width: max-content;
-        min-width: 1450px;
+        min-width: 1360px;
         border-collapse: separate;
         border-spacing: 0;
     }
@@ -163,9 +163,19 @@
             <div class="col-md-2"><label class="form-label small">Source</label><select name="source" class="form-select form-select-sm"><option value="">All</option>@foreach($sources as $source)<option value="{{ $source }}" {{ request('source') === $source ? 'selected' : '' }}>{{ $source }}</option>@endforeach</select></div>
             <div class="col-md-2"><label class="form-label small">Destination</label><input name="destination" value="{{ request('destination') }}" class="form-control form-control-sm"></div>
             <div class="col-md-2"><label class="form-label small">Travel Month</label><input type="month" name="travel_month" value="{{ request('travel_month') }}" class="form-control form-control-sm"></div>
+            <div class="col-md-2">
+                <label class="form-label small">Quick Date</label>
+                <select name="quick" class="form-select form-select-sm">
+                    <option value="">All Dates</option>
+                    <option value="today" {{ request('quick') === 'today' ? 'selected' : '' }}>Today</option>
+                </select>
+            </div>
             <div class="col-md-2"><label class="form-label small">Date From</label><input type="date" name="date_from" value="{{ request('date_from') }}" class="form-control form-control-sm"></div>
             <div class="col-md-2"><label class="form-label small">Date To</label><input type="date" name="date_to" value="{{ request('date_to') }}" class="form-control form-control-sm"></div>
-            <div class="col-md-2"><button class="btn btn-sm btn-primary w-100">Apply Filters</button></div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-sm btn-primary flex-fill">Apply</button>
+                <a href="{{ route('sales.queries.index') }}" class="btn btn-sm btn-outline-secondary flex-fill">Reset</a>
+            </div>
         </form>
     </div>
 </div>
@@ -182,7 +192,7 @@
         <table class="table table-sm table-hover align-middle mb-0 query-register-table">
             <thead class="table-light">
                 <tr>
-                    <th class="query-no-cell">Query No</th><th>Query Date</th><th>Query Details</th><th>Service Type</th><th>Client Name</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Travel Date</th><th>Pax</th><th>Source</th><th>Assigned By</th><th>Assigned To</th><th>Priority</th><th>Stage</th><th>Status</th><th>Expected Sale</th><th>Last Follow-Up</th><th>Next Follow-Up</th><th>Latest Remark</th><th>Age</th><th>Created</th>
+                    <th class="query-no-cell">Query No</th><th>Query Date</th><th>Query Details</th><th>Service Type</th><th>Client Name</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Travel Date</th><th>Pax</th><th>Source</th><th>Assigned By</th><th>Assigned To</th><th>Priority</th><th>Stage</th><th>Status</th><th>Last Follow-Up</th><th>Next Follow-Up</th><th>Latest Remark</th><th>Age</th><th>Created</th>@role('super-admin')<th>Action</th>@endrole
                 </tr>
             </thead>
             <tbody>
@@ -204,15 +214,23 @@
                         <td><span class="badge bg-light text-dark border">{{ $query->priority }}</span></td>
                         <td>{{ $query->stage }}</td>
                         <td><span class="badge bg-{{ $query->status === 'Converted' ? 'success' : ($query->status === 'Lost' ? 'danger' : 'primary') }}">{{ $query->status }}</span></td>
-                        <td class="text-end query-money">{{ $query->expected_sale_amount ? 'INR '.number_format((float) $query->expected_sale_amount, 2) : '-' }}</td>
                         <td>{{ $query->last_followup_date?->format('d M Y') ?? '-' }}</td>
                         <td>{{ $query->next_followup_date?->format('d M Y') ?? '-' }}</td>
                         <td><span class="query-cell-truncate" title="{{ $query->latest_remark }}">{{ Str::limit($query->latest_remark, 40) }}</span></td>
                         <td><span class="badge bg-{{ $query->age_color === 'orange' ? 'warning text-dark' : $query->age_color }}">{{ $query->age_days }}d</span></td>
                         <td>{{ $query->created_at?->timezone(config('app.display_timezone'))->format('d M Y') }}</td>
+                        @role('super-admin')
+                            <td>
+                                <form action="{{ route('sales.queries.destroy', $query) }}" method="POST" onsubmit="return confirm('Delete this query permanently?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                        @endrole
                     </tr>
                 @empty
-                    <tr><td colspan="22" class="text-center text-muted py-4">No queries found.</td></tr>
+                    <tr><td colspan="{{ auth()->user()->hasRole('super-admin') ? 22 : 21 }}" class="text-center text-muted py-4">No queries found.</td></tr>
                 @endforelse
             </tbody>
         </table>

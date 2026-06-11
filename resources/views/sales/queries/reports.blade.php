@@ -25,7 +25,7 @@
             <div class="col-md-2"><button class="btn btn-sm btn-primary w-100">Run Report</button></div>
         </form>
         <table class="table table-sm align-middle">
-            <thead class="table-light"><tr><th>Query</th><th>Client</th><th>Service</th><th>Source</th><th>Employee</th><th>Status</th><th>Expected Sale</th><th>Next Follow-Up</th></tr></thead>
+            <thead class="table-light"><tr><th>Query</th><th>Client</th><th>Service</th><th>Source</th><th>Employee</th><th>Status</th><th>Next Follow-Up</th></tr></thead>
             <tbody>
                 @forelse($queries as $query)
                     <tr>
@@ -35,7 +35,6 @@
                         <td>{{ $query->source }}</td>
                         <td>{{ $query->assignedTo?->name ?? '-' }}</td>
                         <td>{{ $query->status }}</td>
-                        <td class="text-end">{{ $query->expected_sale_amount ? 'INR '.number_format((float) $query->expected_sale_amount, 2) : '-' }}</td>
                         <td>{{ $query->next_followup_date?->format('d M Y') ?? '-' }}</td>
                     </tr>
                 @empty

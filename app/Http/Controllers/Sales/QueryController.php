@@ -103,6 +103,15 @@ class QueryController extends Controller
         return redirect()->route('sales.queries.show', $query)->with('success', 'Query updated successfully.');
     }
 
+    public function destroy(SalesQuery $query)
+    {
+        abort_unless(Auth::user()->hasRole('super-admin'), 403);
+
+        $query->delete();
+
+        return redirect()->route('sales.queries.index')->with('success', 'Query deleted successfully.');
+    }
+
     public function addFollowup(StoreQueryFollowupRequest $request, SalesQuery $query)
     {
         $this->authorizeQuery($query);

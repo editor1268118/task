@@ -48,7 +48,19 @@
                         <td><span class="badge bg-light text-dark border">{{ $customer->status }}</span></td>
                         <td>{{ $customer->tasks_count }}</td>
                         <td>{{ $customer->queries_count }}</td>
-                        <td class="text-end"><a href="{{ route('crm.customers.show', $customer) }}" class="btn btn-sm btn-primary">Open</a></td>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-1">
+                                <a href="{{ route('crm.customers.show', $customer) }}" class="btn btn-sm btn-primary">Open</a>
+                                @role('super-admin')
+                                    <a href="{{ route('crm.customers.edit', $customer) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <form action="{{ route('crm.customers.destroy', $customer) }}" method="POST" onsubmit="return confirm('Delete this customer?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                @endrole
+                            </div>
+                        </td>
                     </tr>
                 @empty
                     <tr><td colspan="8" class="text-center text-muted py-4">No customers found.</td></tr>

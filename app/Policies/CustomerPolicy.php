@@ -42,9 +42,7 @@ class CustomerPolicy
 
     public function update(User $user, Customer $customer): bool
     {
-        return $user->hasRole('super-admin')
-            || ($user->hasRole('manager') && $customer->tasks()->where('department_id', $user->department_id)->exists())
-            || ($user->hasRole('employee') && $customer->created_by === $user->id);
+        return $user->hasRole('super-admin');
     }
 
     public function addInteraction(User $user, Customer $customer): bool

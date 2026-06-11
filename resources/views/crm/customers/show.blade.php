@@ -4,6 +4,39 @@
 @section('page-header', $customer->company_name ?? $customer->contact_person ?? $customer->customer_code)
 @section('page-description', 'Customer Master Database profile')
 
+@section('page-actions')
+    @role('super-admin')
+        <div class="d-flex gap-2">
+            <a href="{{ route('crm.customers.edit', $customer) }}" class="btn btn-sm btn-outline-primary">Edit Customer</a>
+            <form action="{{ route('crm.customers.destroy', $customer) }}" method="POST" onsubmit="return confirm('Delete this customer?')">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+        </div>
+    @endrole
+@endsection
+
+@push('styles')
+<style>
+    .crm-tabs .nav-link {
+        color: #475569;
+        border: 1px solid transparent;
+        font-weight: 700;
+    }
+    .crm-tabs .nav-link:hover {
+        color: #0f172a;
+        background: #e0e7ff;
+        border-color: #c7d2fe;
+    }
+    .crm-tabs .nav-link.active {
+        color: #fff;
+        background: #4f46e5;
+        border-color: #4f46e5;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="row g-3 mb-4">
     @foreach([
@@ -24,7 +57,7 @@
 
 <div class="card border-0 shadow-sm">
     <div class="card-body">
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs crm-tabs gap-1" role="tablist">
             @foreach(['overview' => 'Overview', 'queries' => 'Queries', 'tasks' => 'Tasks', 'finance' => 'Finance', 'interactions' => 'Interactions', 'timeline' => 'Activity Timeline'] as $id => $label)
                 <li class="nav-item"><button class="nav-link {{ $loop->first ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#{{ $id }}" type="button">{{ $label }}</button></li>
             @endforeach
@@ -52,7 +85,7 @@
 
             <div class="tab-pane fade" id="queries">
                 <table class="table table-sm align-middle">
-                    <thead class="table-light"><tr><th>Query No</th><th>Service Type</th><th>Status</th><th>Stage</th><th>Expected Sale</th><th>Assigned To</th><th>Created</th><th>Converted Task</th></tr></thead>
+                    <thead class="table-light"><tr><th>Query No</th><th>Service Type</th><th>Status</th><th>Stage</th><th>Assigned To</th><th>Created</th><th>Converted Task</th></tr></thead>
                     <tbody>
                         @forelse($customer->queries as $query)
                             <tr>
@@ -60,13 +93,12 @@
                                 <td>{{ $query->effective_service_type }}</td>
                                 <td>{{ $query->status }}</td>
                                 <td>{{ $query->stage }}</td>
-                                <td class="text-end">{{ $query->expected_sale_amount ? 'INR '.number_format((float) $query->expected_sale_amount, 2) : '-' }}</td>
                                 <td>{{ $query->assignedTo?->name ?? '-' }}</td>
                                 <td>{{ $query->created_at?->timezone(config('app.display_timezone'))->format('d M Y') }}</td>
                                 <td>@if($query->convertedTask)<a href="{{ route('tasks.show', $query->convertedTask) }}">{{ $query->convertedTask->task_no }}</a>@else - @endif</td>
                             </tr>
                         @empty
-                            <tr><td colspan="8" class="text-muted">No linked queries.</td></tr>
+                            <tr><td colspan="7" class="text-muted">No linked queries.</td></tr>
                         @endforelse
                     </tbody>
                 </table>

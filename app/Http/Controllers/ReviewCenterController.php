@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\ApprovalLog;
+use App\Models\ApprovalStep;
 use App\Models\TaskStatusLog;
 use App\Models\TaskStatus;
 use Illuminate\Support\Facades\Auth;
@@ -48,14 +49,21 @@ class ReviewCenterController extends Controller
         $user = Auth::user();
 
         DB::transaction(function () use ($request, $task, $user) {
-            // Log the approval
-            ApprovalLog::create([
-                'task_id' => $task->id,
-                'approval_step_id' => 1, // Placeholder until dynamic step tracking is fully mapped
-                'user_id' => $user->id,
-                'status' => $request->action,
-                'comment' => $request->comment,
-            ]);
+            $approvalStep = ApprovalStep::query()
+                ->whereHas('workflow', fn ($query) => $query->where('task_type_id', $task->task_type_id))
+                ->orderBy('step_order')
+                ->first()
+                ?: ApprovalStep::query()->orderBy('step_order')->first();
+
+            if ($approvalStep) {
+                ApprovalLog::create([
+                    'task_id' => $task->id,
+                    'approval_step_id' => $approvalStep->id,
+                    'user_id' => $user->id,
+                    'status' => $request->action,
+                    'comment' => $request->comment,
+                ]);
+            }
 
             $statusSlug = $request->action === 'request_correction'
                 ? Task::STATUS_COMPLETION_PENDING
