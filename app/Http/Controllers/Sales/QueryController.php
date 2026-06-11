@@ -294,7 +294,13 @@ class QueryController extends Controller
 
     private function authorizeAccess(): void
     {
-        abort_unless(Auth::user()->hasAnyRole(['super-admin', 'manager', 'employee']) && Auth::user()->can('view-queries'), 403);
+        $user = Auth::user();
+
+        abort_unless(
+            $user->hasRole('super-admin')
+            || ($user->hasAnyRole(['manager', 'employee']) && $user->can('view-queries')),
+            403
+        );
     }
 
     private function authorizeCreate(): void

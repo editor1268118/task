@@ -6,9 +6,9 @@
 
 @section('page-actions')
 <div class="d-flex gap-2">
-    @can('create-queries')
+    @if(auth()->user()->hasRole('super-admin') || auth()->user()->can('create-queries'))
         <a href="{{ route('sales.queries.create') }}" class="btn btn-sm btn-primary"><i class="fas fa-plus me-1"></i> New Query</a>
-    @endcan
+    @endif
     <a href="{{ route('sales.queries.export', ['format' => 'xlsx'] + request()->query()) }}" class="btn btn-sm btn-success">XLSX</a>
     <a href="{{ route('sales.queries.export', ['format' => 'csv'] + request()->query()) }}" class="btn btn-sm btn-outline-success">CSV</a>
     <a href="{{ route('sales.queries.print', request()->query()) }}" target="_blank" class="btn btn-sm btn-outline-dark">Print</a>
