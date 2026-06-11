@@ -25,9 +25,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::all()->groupBy(function($data) {
-            return explode('-', $data->name)[0]; // Group by module (e.g., manage, create, edit)
-        });
+        $permissions = $this->groupPermissions();
         return view('admin.roles.create', compact('permissions'));
     }
 
@@ -55,9 +53,7 @@ class RoleController extends Controller
             return back()->with('error', 'Super Admin role cannot be edited.');
         }
 
-        $permissions = Permission::all()->groupBy(function($data) {
-            return explode('-', $data->name)[0];
-        });
+        $permissions = $this->groupPermissions();
         
         $rolePermissions = $role->permissions->pluck('name')->toArray();
 
@@ -102,5 +98,24 @@ class RoleController extends Controller
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role deleted successfully.');
+    }
+
+    private function groupPermissions()
+    {
+        return Permission::orderBy('name')->get()->groupBy(function ($permission) {
+            $name = $permission->name;
+
+            return match (true) {
+                str_contains($name, 'quer') => 'Query Management',
+                str_contains($name, 'task') || str_contains($name, 'finance') || str_contains($name, 'comment') || str_contains($name, 'upload') => 'Task & Operations',
+                str_contains($name, 'user') => 'User Management',
+                str_contains($name, 'role') => 'Role Access',
+                str_contains($name, 'department') || str_contains($name, 'designation') => 'Organization',
+                str_contains($name, 'report') => 'Reports',
+                str_contains($name, 'setting') => 'Settings',
+                str_contains($name, 'notification') => 'Notifications',
+                default => 'General',
+            };
+        });
     }
 }

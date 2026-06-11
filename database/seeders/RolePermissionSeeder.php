@@ -55,6 +55,13 @@ class RolePermissionSeeder extends Seeder
             'record-finance-entries',
             'approve-finance-closure',
 
+            // Query Management
+            'view-queries',
+            'create-queries',
+            'edit-queries',
+            'delete-queries',
+            'convert-queries',
+
             // Comments & Attachments
             'add-comments',
             'upload-files',
@@ -98,6 +105,10 @@ class RolePermissionSeeder extends Seeder
             'export-reports',
             'view-notifications',
             'view-users',
+            'view-queries',
+            'create-queries',
+            'edit-queries',
+            'convert-queries',
         ]);
 
         // Employee — own tasks only
@@ -108,6 +119,8 @@ class RolePermissionSeeder extends Seeder
             'add-comments',
             'upload-files',
             'view-notifications',
+            'view-queries',
+            'create-queries',
         ]);
 
         $finance = Role::firstOrCreate(['name' => 'finance', 'guard_name' => 'web']);

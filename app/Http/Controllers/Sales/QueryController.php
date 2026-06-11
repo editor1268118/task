@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Services\QueryManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 
 class QueryController extends Controller
@@ -36,6 +37,7 @@ class QueryController extends Controller
     public function create()
     {
         $this->authorizeAccess();
+        $this->authorizeCreate();
 
         return view('sales.queries.create', $this->sharedData() + [
             'queryNo' => SalesQuery::generateQueryNumber(),
@@ -46,6 +48,7 @@ class QueryController extends Controller
     public function store(StoreSalesQueryRequest $request)
     {
         $this->authorizeAccess();
+        $this->authorizeCreate();
         $data = $request->validated();
         $duplicates = $this->queries->duplicates($data);
 
@@ -108,6 +111,7 @@ class QueryController extends Controller
         abort_unless(Auth::user()->hasRole('super-admin'), 403);
 
         $query->delete();
+        Cache::flush();
 
         return redirect()->route('sales.queries.index')->with('success', 'Query deleted successfully.');
     }
@@ -290,7 +294,12 @@ class QueryController extends Controller
 
     private function authorizeAccess(): void
     {
-        abort_unless(Auth::user()->hasAnyRole(['super-admin', 'manager', 'employee']), 403);
+        abort_unless(Auth::user()->hasAnyRole(['super-admin', 'manager', 'employee']) && Auth::user()->can('view-queries'), 403);
+    }
+
+    private function authorizeCreate(): void
+    {
+        abort_unless(Auth::user()->hasRole('super-admin') || Auth::user()->can('create-queries'), 403);
     }
 
     private function authorizeQuery(SalesQuery $query): void

@@ -11,7 +11,10 @@ use App\Models\CustomerReceipt;
 use App\Models\SalesQuery;
 use App\Models\VendorPayment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use App\Services\ReportService;
+use Spatie\Permission\PermissionRegistrar;
 
 class DashboardController extends Controller
 {
@@ -24,6 +27,7 @@ class DashboardController extends Controller
     {
         $bookings = Booking::withSum(['receipts as received_total' => fn ($query) => $query->whereIn('receipt_status', CustomerReceipt::APPROVED_STATUSES)], 'amount_received')
             ->withSum(['vendorPayments as paid_total' => fn ($query) => $query->whereIn('payment_status', VendorPayment::APPROVED_STATUSES)], 'amount_paid')
+            ->whereHas('task')
             ->get();
 
         $stats = [
@@ -48,5 +52,14 @@ class DashboardController extends Controller
         $chartData = $reportService->getDashboardChartsData();
 
         return view('admin.dashboard', compact('stats', 'departmentTasks', 'chartData'));
+    }
+
+    public function clearCache()
+    {
+        Cache::flush();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        Artisan::call('optimize:clear');
+
+        return back()->with('success', 'Application cache, config cache, route cache, view cache, and permission cache were cleared.');
     }
 }

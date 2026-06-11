@@ -15,6 +15,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Requests\UpdateTaskStatusRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class TaskController extends Controller
 {
@@ -214,6 +215,7 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         $task->delete(); // Soft delete
+        Cache::flush();
 
         return redirect()->route('tasks.index')
             ->with('success', 'Task deleted successfully.');

@@ -104,9 +104,9 @@
                 </a>
                 <ul class="nav-submenu {{ request()->routeIs('tasks.*') && !request()->routeIs('tasks.completion.*') ? 'show' : '' }}">
                     <li><a href="{{ route('tasks.index') }}">All Tasks</a></li>
-                    @hasanyrole('super-admin|manager')
+                    @can('create-tasks')
                         <li><a href="{{ route('tasks.create') }}">Create Task</a></li>
-                    @endhasanyrole
+                    @endcan
                 </ul>
             </li>
             @hasanyrole('super-admin|manager')

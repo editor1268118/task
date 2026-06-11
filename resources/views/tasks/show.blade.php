@@ -610,7 +610,7 @@
                         <div class="d-flex align-items-center gap-2">
                             <span class="fw-semibold">{{ $task->assignee?->name ?? 'Unassigned' }}</span>
                             @if($task->assignee?->profile_photo)
-                                <img src="{{ Storage::url($task->assignee->profile_photo) }}" class="rounded-circle" width="24" height="24" alt="">
+                                <img src="{{ $task->assignee->profilePhotoUrl() }}" class="rounded-circle" width="24" height="24" alt="">
                             @endif
                         </div>
                     </li>

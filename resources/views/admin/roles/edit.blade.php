@@ -33,6 +33,15 @@
 
     <h5 class="mb-3">Assign Permissions</h5>
 
+    <div class="alert alert-info border-0 shadow-sm">
+        <div class="fw-semibold mb-1">Employee Access Controls</div>
+        <div class="small mb-0">
+            Enable <strong>Create Queries</strong> to let this role create Query Register entries.
+            Enable <strong>Create Tasks</strong> to let this role create operational tasks.
+            These switches are useful for giving selected employee roles more responsibility without making them managers.
+        </div>
+    </div>
+
     <div class="row g-4">
         @foreach($permissions as $group => $perms)
             <div class="col-md-4">

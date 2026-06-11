@@ -177,6 +177,12 @@
                     <a href="{{ route('admin.users.create') }}" class="btn btn-outline-primary">
                         <i class="fas fa-user-plus me-1"></i> Add User
                     </a>
+                    <form action="{{ route('admin.cache.clear') }}" method="POST" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-warning">
+                            <i class="fas fa-broom me-1"></i> Clear Cache
+                        </button>
+                    </form>
                     
 
                 </div>

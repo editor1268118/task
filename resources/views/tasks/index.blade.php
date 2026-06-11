@@ -149,7 +149,7 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="user-avatar-sm">
                                         @if($task->assignee?->profile_photo)
-                                            <img src="{{ Storage::url($task->assignee->profile_photo) }}" alt="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                                            <img src="{{ $task->assignee->profilePhotoUrl() }}" alt="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
                                         @else
                                             <span>{{ substr($task->assignee?->name ?? 'U', 0, 1) }}</span>
                                         @endif

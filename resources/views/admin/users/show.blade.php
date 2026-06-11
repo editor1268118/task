@@ -18,7 +18,7 @@
                 <div class="mb-4 d-flex justify-content-center">
                     <div class="user-avatar" style="width: 120px; height: 120px; font-size: 3rem;">
                         @if($user->profile_photo)
-                            <img src="{{ Storage::url($user->profile_photo) }}" alt="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <img src="{{ $user->profilePhotoUrl() }}" alt="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
                         @else
                             <span>{{ substr($user->name, 0, 1) }}</span>
                         @endif

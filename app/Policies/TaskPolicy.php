@@ -49,7 +49,7 @@ class TaskPolicy
      */
     public function create(User $user)
     {
-        return $user->hasRole(['super-admin', 'manager']);
+        return $user->hasRole('super-admin') || $user->can('create-tasks');
     }
 
     /**

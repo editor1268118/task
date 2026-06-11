@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.')
         ->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+            Route::post('/cache/clear', [AdminDashboardController::class, 'clearCache'])->name('cache.clear');
 
             // Phase 2: Organization & User Management
             Route::resource('users', App\Http\Controllers\Admin\UserController::class);
@@ -175,6 +176,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ─── Profile Routes ────────────────────────────────────────────
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/photo/{user}', [App\Http\Controllers\ProfileController::class, 'showPhoto'])->name('profile.photo.show');
     Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::patch('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo');
     Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');

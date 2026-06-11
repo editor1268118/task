@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -148,5 +149,18 @@ class User extends Authenticatable
     public function followUps()
     {
         return $this->hasMany(FollowUp::class, 'assigned_to');
+    }
+
+    public function profilePhotoUrl(): ?string
+    {
+        if (!$this->profile_photo) {
+            return null;
+        }
+
+        if (Storage::disk('public')->exists($this->profile_photo)) {
+            return route('profile.photo.show', $this);
+        }
+
+        return Storage::url($this->profile_photo);
     }
 }

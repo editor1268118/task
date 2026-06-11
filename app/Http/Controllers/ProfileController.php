@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -61,6 +62,13 @@ class ProfileController extends Controller
         }
 
         return Redirect::route('profile.edit')->with('status', 'photo-updated');
+    }
+
+    public function showPhoto(User $user)
+    {
+        abort_unless($user->profile_photo && Storage::disk('public')->exists($user->profile_photo), 404);
+
+        return response()->file(Storage::disk('public')->path($user->profile_photo));
     }
 
     /**

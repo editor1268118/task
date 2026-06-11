@@ -73,7 +73,7 @@
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="user-avatar-sm">
                                         @if($user->profile_photo)
-                                            <img src="{{ Storage::url($user->profile_photo) }}" alt="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                                            <img src="{{ $user->profilePhotoUrl() }}" alt="" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
                                         @else
                                             <span>{{ substr($user->name, 0, 1) }}</span>
                                         @endif

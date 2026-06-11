@@ -29,6 +29,13 @@
 
     <h5 class="mb-3">Assign Permissions</h5>
 
+    <div class="alert alert-info border-0 shadow-sm">
+        <div class="fw-semibold mb-1">Access Controls</div>
+        <div class="small mb-0">
+            Use <strong>Create Queries</strong> and <strong>Create Tasks</strong> to control whether users with this role can create sales queries or operational tasks.
+        </div>
+    </div>
+
     <div class="row g-4">
         @foreach($permissions as $group => $perms)
             <div class="col-md-4">

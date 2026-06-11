@@ -10,7 +10,7 @@ class StoreSalesQueryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->hasAnyRole(['super-admin', 'manager', 'employee']);
+        return $this->user()->hasRole('super-admin') || $this->user()->can('create-queries');
     }
 
     public function rules(): array
