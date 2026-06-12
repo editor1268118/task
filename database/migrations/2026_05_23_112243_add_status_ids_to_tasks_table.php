@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -36,10 +37,14 @@ return new class extends Migration
             }
         }
 
-        // Drop old column
-        Schema::table('tasks', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        // SQLite in test runs cannot drop this legacy column on older Laravel/SQLite
+        // combinations. Keeping it there is harmless because Task::status reads the
+        // new task_status_id relation first.
+        if (DB::getDriverName() !== 'sqlite') {
+            Schema::table('tasks', function (Blueprint $table) {
+                $table->dropColumn('status');
+            });
+        }
     }
 
     /**

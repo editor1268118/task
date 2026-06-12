@@ -12,6 +12,10 @@ return new class extends Migration
      */
     public function up()
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         DB::statement("ALTER TABLE tasks MODIFY COLUMN status ENUM('pending', 'in_progress', 'completed', 'on_hold', 'cancelled', 'follow_up') DEFAULT 'pending'");
     }
 
@@ -22,6 +26,10 @@ return new class extends Migration
      */
     public function down()
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
         DB::statement("ALTER TABLE tasks MODIFY COLUMN status ENUM('pending', 'in_progress', 'completed', 'on_hold', 'cancelled') DEFAULT 'pending'");
     }
 };

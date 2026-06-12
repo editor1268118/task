@@ -15,12 +15,14 @@ return new class extends Migration
             $table->index('booking_status');
         });
 
-        DB::table('bookings')
-            ->join('tasks', 'tasks.id', '=', 'bookings.task_id')
-            ->update([
-                'bookings.client_name' => DB::raw('tasks.client_name'),
-                'bookings.booking_status' => DB::raw('bookings.operational_status'),
-            ]);
+        if (DB::getDriverName() !== 'sqlite' && Schema::hasColumn('tasks', 'client_name')) {
+            DB::table('bookings')
+                ->join('tasks', 'tasks.id', '=', 'bookings.task_id')
+                ->update([
+                    'bookings.client_name' => DB::raw('tasks.client_name'),
+                    'bookings.booking_status' => DB::raw('bookings.operational_status'),
+                ]);
+        }
     }
 
     public function down()
