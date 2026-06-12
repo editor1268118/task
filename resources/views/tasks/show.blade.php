@@ -318,6 +318,8 @@
                                         <th>Transaction Type</th>
                                         <th>Reference Number</th>
                                         <th>Party</th>
+                                        <th>Payment Mode</th>
+                                        <th>Account No.</th>
                                         <th class="text-end">Amount</th>
                                         <th>Status</th>
                                         <th>Entered By</th>
@@ -332,6 +334,8 @@
                                             <td>{{ $entry['transaction_type'] }}</td>
                                             <td><span class="fw-semibold">{{ $entry['reference_no'] }}</span></td>
                                             <td>{{ $entry['party'] }}</td>
+                                            <td>{{ $entry['payment_mode'] ?? '-' }}</td>
+                                            <td>{{ $entry['account_no'] ?? '-' }}</td>
                                             <td class="text-end">INR {{ number_format($entry['amount'], 2) }}</td>
                                             <td><span class="badge bg-light text-dark border">{{ Str::headline($entry['status']) }}</span></td>
                                             <td>{{ $entry['entered_by'] }}</td>
@@ -355,7 +359,7 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="9" class="text-center text-muted py-4">No finance transactions recorded yet.</td></tr>
+                                        <tr><td colspan="11" class="text-center text-muted py-4">No finance transactions recorded yet.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>

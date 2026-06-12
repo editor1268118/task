@@ -163,4 +163,9 @@ class User extends Authenticatable
 
         return Storage::url($this->profile_photo);
     }
+
+    public function routeNotificationForMail(): array|string|null
+    {
+        return $this->email ? [$this->email => $this->name] : null;
+    }
 }

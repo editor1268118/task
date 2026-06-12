@@ -49,7 +49,7 @@
 
     .finance-ledger-table {
         width: max-content;
-        min-width: 1120px;
+        min-width: 1320px;
         border-collapse: separate;
         border-spacing: 0;
     }
@@ -200,6 +200,8 @@
                     <th>Task No</th>
                     <th>Client</th>
                     <th>Transaction Type</th>
+                    <th>Payment Mode</th>
+                    <th>Account No.</th>
                     <th class="text-end">Amount</th>
                     <th>Status</th>
                     <th>Entered By</th>
@@ -219,13 +221,15 @@
                         </td>
                         <td><span class="finance-ledger-truncate" title="{{ $transaction['client'] }}">{{ $transaction['client'] }}</span></td>
                         <td>{{ $transaction['transaction_type'] }}</td>
+                        <td><span class="finance-ledger-truncate" title="{{ $transaction['payment_mode'] ?? '-' }}">{{ $transaction['payment_mode'] ?? '-' }}</span></td>
+                        <td>{{ $transaction['account_no'] ?? '-' }}</td>
                         <td class="text-end">INR {{ number_format($transaction['amount'], 2) }}</td>
                         <td><span class="badge bg-light text-dark border">{{ Str::headline($transaction['status']) }}</span></td>
                         <td>{{ $transaction['entered_by'] }}</td>
                         <td>{{ $transaction['date']?->format('d M Y') ?? '-' }}</td>
                     </tr>
                 @empty
-                    <tr><td colspan="8" class="text-center text-muted py-4">No finance transactions found for the selected filters.</td></tr>
+                    <tr><td colspan="10" class="text-center text-muted py-4">No finance transactions found for the selected filters.</td></tr>
                 @endforelse
             </tbody>
         </table>
