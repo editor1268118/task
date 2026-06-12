@@ -16,21 +16,32 @@ class AdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@amigostms.com'],
-            [
-                'employee_id'   => 'EMP0001',
-                'name'          => 'Super Admin',
-                'phone'         => '9999999999',
-                'department_id' => Department::where('code', 'ENG')->first()?->id,
-                'password'      => Hash::make('password'),
-                'status'        => 'active',
-                'email_verified_at' => now(),
-            ]
-        );
+        $email = env('SUPER_ADMIN_EMAIL', 'admin@amigostms.com');
+        $password = env('SUPER_ADMIN_PASSWORD', 'password');
+
+        $admin = User::where('email', $email)
+            ->orWhere('employee_id', 'EMP0001')
+            ->first();
+
+        if (! $admin) {
+            $admin = new User([
+                'employee_id' => 'EMP0001',
+            ]);
+        }
+
+        $admin->forceFill([
+            'employee_id' => $admin->employee_id ?: 'EMP0001',
+            'name' => $admin->name ?: 'Super Admin',
+            'email' => $email,
+            'phone' => $admin->phone ?: '9999999999',
+            'department_id' => $admin->department_id ?: Department::where('code', 'ENG')->first()?->id,
+            'password' => Hash::make($password),
+            'status' => 'active',
+            'email_verified_at' => $admin->email_verified_at ?: now(),
+        ])->save();
 
         $admin->assignRole('super-admin');
 
-        $this->command->info('Super Admin user created: admin@amigostms.com / password');
+        $this->command->info("Super Admin user ensured: {$email}");
     }
 }
