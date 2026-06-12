@@ -16,16 +16,32 @@
         overflow-x: hidden;
     }
 
+    .task-detail-page *,
+    .task-detail-page *::before,
+    .task-detail-page *::after {
+        min-width: 0;
+    }
+
     .task-detail-page .row,
     .task-detail-page [class*="col-"],
     .task-detail-page .card,
+    .task-detail-page .card-header,
     .task-detail-page .card-body {
         min-width: 0;
+        max-width: 100%;
     }
 
     .task-detail-page .text-wrap-safe {
         overflow-wrap: anywhere;
         word-break: break-word;
+    }
+
+    .task-detail-page .task-title-row {
+        gap: 0.75rem;
+    }
+
+    .task-detail-page .task-title-row .btn {
+        flex-shrink: 0;
     }
 
     .task-detail-page .task-table-shell {
@@ -55,7 +71,7 @@
     }
 
     .task-detail-page .finance-ledger-table {
-        min-width: 1080px;
+        min-width: 980px;
     }
 
     .task-detail-page .finance-ledger-table th,
@@ -67,6 +83,14 @@
         max-width: 180px;
         white-space: normal;
         overflow-wrap: anywhere;
+    }
+
+    .task-detail-page .attachment-item {
+        min-width: 0;
+    }
+
+    .task-detail-page .attachment-actions {
+        flex: 0 0 auto;
     }
 
     /* Timeline styles */
@@ -115,8 +139,8 @@
         <!-- Task Header & Details -->
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body p-4">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <h3 class="mb-0 fw-bold">{{ $task->title }}</h3>
+                <div class="task-title-row d-flex justify-content-between align-items-start flex-wrap mb-3">
+                    <h3 class="mb-0 fw-bold text-wrap-safe">{{ $task->title }}</h3>
                     @can('update', $task)
                         <a href="{{ route('tasks.edit', $task) }}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-edit me-1"></i> Edit
@@ -714,7 +738,7 @@
                 @if($task->attachments->count() > 0)
                     <div class="d-flex flex-column gap-2 mb-3">
                         @foreach($task->attachments as $attachment)
-                            <div class="d-flex align-items-center justify-content-between p-2 border rounded bg-light">
+                            <div class="attachment-item d-flex align-items-center justify-content-between gap-2 p-2 border rounded bg-light">
                                 <div class="d-flex align-items-center gap-2 overflow-hidden">
                                     @if(in_array(strtolower($attachment->file_type), ['pdf']))
                                         <i class="fas fa-file-pdf text-danger fa-lg"></i>
@@ -732,7 +756,7 @@
                                         <div class="text-muted" style="font-size: 0.7rem;">{{ $attachment->formatted_size }} &bull; {{ $attachment->uploader->name }}</div>
                                     </div>
                                 </div>
-                                <div class="d-flex gap-1">
+                                <div class="attachment-actions d-flex gap-1">
                                     <a href="{{ route('attachments.download', $attachment) }}" class="btn btn-sm btn-link text-primary p-1" data-bs-toggle="tooltip" title="Download">
                                         <i class="fas fa-download"></i>
                                     </a>
