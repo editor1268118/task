@@ -40,35 +40,28 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::withTrashed()->where('email', $request->email)->first();
+        $superAdminEmailExists = User::withTrashed()
+            ->where('email', $request->email)
+            ->get()
+            ->contains(fn (User $user) => $user->hasRole('super-admin'));
 
-        if ($user?->hasRole('super-admin')) {
+        if ($superAdminEmailExists) {
             return back()
                 ->withInput($request->only('name', 'email'))
                 ->withErrors(['email' => 'This admin email is already registered. Please login or reset the password.']);
         }
 
-        if ($user) {
-            $user->restore();
-            $user->forceFill([
-                'name' => $request->name,
-                'password' => Hash::make($request->password),
-                'status' => 'active',
-                'email_verified_at' => $user->email_verified_at ?? now(),
-            ])->save();
-        } else {
-            $user = User::create([
-                'employee_id' => $this->nextEmployeeId(),
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'status' => 'active',
-                'email_verified_at' => now(),
-            ]);
+        $user = User::create([
+            'employee_id' => $this->nextEmployeeId(),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'status' => 'active',
+            'email_verified_at' => now(),
+        ]);
 
-            if (Role::where('name', 'employee')->exists()) {
-                $user->assignRole('employee');
-            }
+        if (Role::where('name', 'employee')->exists()) {
+            $user->assignRole('employee');
         }
 
         event(new Registered($user));

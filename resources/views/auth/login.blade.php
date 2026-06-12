@@ -230,14 +230,14 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                <!-- Email -->
+                <!-- Login ID -->
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
+                    <label for="email" class="form-label">Email Address or Employee ID</label>
                     <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                        <input id="email" type="email" class="form-control" name="email"
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input id="email" type="text" class="form-control" name="email"
                                value="{{ old('email') }}" required autofocus
-                               placeholder="you@company.com">
+                               placeholder="you@company.com or EMP0002">
                     </div>
                 </div>
 
