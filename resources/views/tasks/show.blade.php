@@ -11,6 +11,64 @@
 
 @push('styles')
 <style>
+    .task-detail-page {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .task-detail-page .row,
+    .task-detail-page [class*="col-"],
+    .task-detail-page .card,
+    .task-detail-page .card-body {
+        min-width: 0;
+    }
+
+    .task-detail-page .text-wrap-safe {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .task-detail-page .task-table-shell {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .task-detail-page .task-table-scroll {
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: thin;
+    }
+
+    .task-detail-page .task-table-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .task-detail-page .task-table-scroll::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 999px;
+    }
+
+    .task-detail-page .task-table-scroll::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 999px;
+    }
+
+    .task-detail-page .finance-ledger-table {
+        min-width: 1080px;
+    }
+
+    .task-detail-page .finance-ledger-table th,
+    .task-detail-page .finance-ledger-table td {
+        white-space: nowrap;
+    }
+
+    .task-detail-page .finance-ledger-table .wrap-cell {
+        max-width: 180px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
     /* Timeline styles */
     .timeline {
         position: relative;
@@ -49,6 +107,7 @@
 @endpush
 
 @section('content')
+<div class="task-detail-page">
 <div class="row g-4 mb-5">
     <!-- Left Column (Main Content) -->
     <div class="col-lg-8">
@@ -309,9 +368,9 @@
                             </div>
                         </div>
                     @endcan
-                    <div class="border rounded overflow-hidden">
-                        <div class="table-responsive">
-                            <table class="table table-sm align-middle mb-0">
+                    <div class="border rounded task-table-shell">
+                        <div class="task-table-scroll">
+                            <table class="table table-sm align-middle mb-0 finance-ledger-table">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Date</th>
@@ -333,7 +392,7 @@
                                             <td>{{ $entry['date']?->format('d M Y') ?? '-' }}</td>
                                             <td>{{ $entry['transaction_type'] }}</td>
                                             <td><span class="fw-semibold">{{ $entry['reference_no'] }}</span></td>
-                                            <td>{{ $entry['party'] }}</td>
+                                            <td class="wrap-cell">{{ $entry['party'] }}</td>
                                             <td>{{ $entry['payment_mode'] ?? '-' }}</td>
                                             <td>{{ $entry['account_no'] ?? '-' }}</td>
                                             <td class="text-end">INR {{ number_format($entry['amount'], 2) }}</td>
@@ -405,7 +464,7 @@
                                     {{ $comment->created_at->diffForHumans() }}
                                 </div>
                             </div>
-                            <div class="p-3 bg-light rounded text-dark">
+                            <div class="p-3 bg-light rounded text-dark text-wrap-safe">
                                 {!! nl2br(e($comment->comment)) !!}
                             </div>
                             @if(auth()->user()->hasRole('super-admin') || auth()->id() === $comment->user_id)
@@ -448,7 +507,7 @@
                             <div class="text-muted mb-1" style="font-size: 0.75rem;">
                                 {{ $activity->created_at->timezone(config('app.display_timezone'))->format('d M Y h:i A') }}
                             </div>
-                            <div>
+                            <div class="text-wrap-safe">
                                 <span class="fw-semibold text-dark">{{ $activity->causer?->name ?? 'System' }}</span>
                                 {{ $activity->description }}
                             </div>
@@ -708,6 +767,7 @@
         </div>
 
     </div>
+</div>
 </div>
 @endsection
 

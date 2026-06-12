@@ -51,10 +51,18 @@
                     </div>
                     <div class="card-body">
                         @foreach($perms as $permission)
+                            @php
+                                $permissionLabel = match ($permission->name) {
+                                    'create-queries' => 'Register Query',
+                                    'view-queries' => 'View Query Register',
+                                    'create-tasks' => 'Create Task',
+                                    default => Str::headline(str_replace('-', ' ', $permission->name)),
+                                };
+                            @endphp
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm_{{ $permission->id }}" {{ (is_array(old('permissions')) && in_array($permission->name, old('permissions'))) || in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                    {{ Str::headline(str_replace('-', ' ', $permission->name)) }}
+                                    {{ $permissionLabel }}
                                 </label>
                             </div>
                         @endforeach

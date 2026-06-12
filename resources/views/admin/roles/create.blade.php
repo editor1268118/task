@@ -32,7 +32,7 @@
     <div class="alert alert-info border-0 shadow-sm">
         <div class="fw-semibold mb-1">Access Controls</div>
         <div class="small mb-0">
-            Use <strong>Create Queries</strong> and <strong>Create Tasks</strong> to control whether users with this role can create sales queries or operational tasks.
+            Use <strong>Register Query</strong> and <strong>Create Task</strong> to control whether users with this role can create sales queries or operational tasks.
         </div>
     </div>
 
@@ -45,10 +45,18 @@
                     </div>
                     <div class="card-body">
                         @foreach($perms as $permission)
+                            @php
+                                $permissionLabel = match ($permission->name) {
+                                    'create-queries' => 'Register Query',
+                                    'view-queries' => 'View Query Register',
+                                    'create-tasks' => 'Create Task',
+                                    default => Str::headline(str_replace('-', ' ', $permission->name)),
+                                };
+                            @endphp
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm_{{ $permission->id }}" {{ is_array(old('permissions')) && in_array($permission->name, old('permissions')) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                    {{ Str::headline(str_replace('-', ' ', $permission->name)) }}
+                                    {{ $permissionLabel }}
                                 </label>
                             </div>
                         @endforeach
