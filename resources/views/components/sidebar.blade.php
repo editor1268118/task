@@ -37,7 +37,7 @@
                 </a>
             </li>
 
-            @hasanyrole('super-admin|manager|employee')
+            @canany(['view-queries', 'create-queries'])
                 <li class="nav-section">
                     <span class="nav-section-title">Sales</span>
                 </li>
@@ -65,7 +65,7 @@
                         <span class="nav-text">Query Reports</span>
                     </a>
                 </li>
-            @endhasanyrole
+            @endcanany
 
             @hasanyrole('super-admin|manager|employee|finance')
                 <li class="nav-section">
@@ -168,52 +168,66 @@
                 </a>
             </li>
 
-            @role('super-admin')
+            @canany(['manage-users', 'view-users', 'create-users', 'edit-users', 'delete-users', 'manage-roles', 'manage-departments', 'manage-designations', 'manage-task-types'])
                 <li class="nav-section">
                     <span class="nav-section-title">Administration</span>
                 </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                        <i class="fas fa-users nav-icon"></i>
-                        <span class="nav-text">Users</span>
-                        <i class="fas fa-chevron-right nav-arrow"></i>
-                    </a>
-                    <ul class="nav-submenu {{ request()->routeIs('admin.users.*') ? 'show' : '' }}">
-                        <li><a href="{{ route('admin.users.index') }}">All Users</a></li>
-                        <li><a href="{{ route('admin.users.create') }}">Add User</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
-                        <i class="fas fa-shield-halved nav-icon"></i>
-                        <span class="nav-text">Roles</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.departments.index') }}" class="nav-link {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
-                        <i class="fas fa-building nav-icon"></i>
-                        <span class="nav-text">Departments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.designations.index') }}" class="nav-link {{ request()->routeIs('admin.designations.*') ? 'active' : '' }}">
-                        <i class="fas fa-id-badge nav-icon"></i>
-                        <span class="nav-text">Designations</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.task-types.index') }}" class="nav-link {{ request()->routeIs('admin.task-types.*') ? 'active' : '' }}">
-                        <i class="fas fa-tags nav-icon"></i>
-                        <span class="nav-text">Task Types</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('reports.audit') }}" class="nav-link {{ request()->routeIs('reports.audit') ? 'active' : '' }}">
-                        <i class="fas fa-history nav-icon"></i>
-                        <span class="nav-text">Activity Logs</span>
-                    </a>
-                </li>
-            @endrole
+                @canany(['view-users', 'create-users', 'edit-users', 'delete-users', 'manage-users'])
+                    <li class="nav-item">
+                        <a href="#" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <i class="fas fa-users nav-icon"></i>
+                            <span class="nav-text">Users</span>
+                            <i class="fas fa-chevron-right nav-arrow"></i>
+                        </a>
+                        <ul class="nav-submenu {{ request()->routeIs('admin.users.*') ? 'show' : '' }}">
+                            <li><a href="{{ route('admin.users.index') }}">All Users</a></li>
+                            @can('create-users')
+                                <li><a href="{{ route('admin.users.create') }}">Add User</a></li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcanany
+                @can('manage-roles')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.roles.index') }}" class="nav-link {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
+                            <i class="fas fa-shield-halved nav-icon"></i>
+                            <span class="nav-text">Roles</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('manage-departments')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.departments.index') }}" class="nav-link {{ request()->routeIs('admin.departments.*') ? 'active' : '' }}">
+                            <i class="fas fa-building nav-icon"></i>
+                            <span class="nav-text">Departments</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('manage-designations')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.designations.index') }}" class="nav-link {{ request()->routeIs('admin.designations.*') ? 'active' : '' }}">
+                            <i class="fas fa-id-badge nav-icon"></i>
+                            <span class="nav-text">Designations</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('manage-task-types')
+                    <li class="nav-item">
+                        <a href="{{ route('admin.task-types.index') }}" class="nav-link {{ request()->routeIs('admin.task-types.*') ? 'active' : '' }}">
+                            <i class="fas fa-tags nav-icon"></i>
+                            <span class="nav-text">Task Types</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('view-reports')
+                    <li class="nav-item">
+                        <a href="{{ route('reports.audit') }}" class="nav-link {{ request()->routeIs('reports.audit') ? 'active' : '' }}">
+                            <i class="fas fa-history nav-icon"></i>
+                            <span class="nav-text">Activity Logs</span>
+                        </a>
+                    </li>
+                @endcan
+            @endcanany
         </ul>
     </nav>
 </aside>

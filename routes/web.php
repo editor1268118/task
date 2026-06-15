@@ -37,7 +37,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // ─── Super Admin Routes ────────────────────────────────────────
     Route::prefix('admin')
-        ->middleware('role:super-admin')
+        ->middleware('role_or_permission:super-admin|manage-users|view-users|create-users|edit-users|delete-users|manage-roles|manage-departments|manage-designations|manage-task-types')
         ->name('admin.')
         ->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -95,7 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('sales')
-        ->middleware('role:super-admin|manager|employee')
+        ->middleware('permission:view-queries|create-queries')
         ->name('sales.')
         ->group(function () {
             Route::get('queries/dashboard', [QueryController::class, 'dashboard'])->name('queries.dashboard');
