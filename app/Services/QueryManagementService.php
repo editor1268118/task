@@ -40,8 +40,6 @@ class QueryManagementService
                     ->orWhere('created_by', $user->id)
                     ->orWhere('assigned_by', $user->id);
             });
-        } elseif ($user->hasRole('finance')) {
-            abort(403);
         }
 
         return $query;
@@ -297,6 +295,8 @@ class QueryManagementService
                     'Converted from query ' . $query->query_no,
                     $query->destination ? 'Destination: ' . $query->destination : null,
                     $query->travel_date ? 'Travel Date: ' . $query->travel_date->format('d M Y') : null,
+                    $query->adult_count !== null ? 'Adult: ' . $query->adult_count : null,
+                    $query->child_count !== null ? 'Child: ' . $query->child_count : null,
                     $query->number_of_pax ? 'Pax: ' . $query->number_of_pax : null,
                     $query->latest_remark ? 'Remarks: ' . $query->latest_remark : null,
                 ])),
@@ -317,6 +317,8 @@ class QueryManagementService
                     'destination' => $query->destination,
                     'travel_month' => $query->travel_month,
                     'number_of_pax' => $query->number_of_pax,
+                    'adult_count' => $query->adult_count,
+                    'child_count' => $query->child_count,
                 ]),
             ], $user);
 

@@ -37,7 +37,7 @@
                 </a>
             </li>
 
-            @canany(['view-queries', 'create-queries'])
+            @if(auth()->user()->hasRole('super-admin') || auth()->user()->canAny(['view-queries', 'create-queries']))
                 <li class="nav-section">
                     <span class="nav-section-title">Sales</span>
                 </li>
@@ -65,7 +65,7 @@
                         <span class="nav-text">Query Reports</span>
                     </a>
                 </li>
-            @endcanany
+            @endif
 
             @hasanyrole('super-admin|manager|employee|finance')
                 <li class="nav-section">

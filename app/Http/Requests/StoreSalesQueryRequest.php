@@ -8,6 +8,18 @@ use Illuminate\Validation\Rule;
 
 class StoreSalesQueryRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $adultCount = $this->input('adult_count');
+        $childCount = $this->input('child_count');
+
+        if ($adultCount !== null || $childCount !== null) {
+            $this->merge([
+                'number_of_pax' => max(0, (int) $adultCount) + max(0, (int) $childCount),
+            ]);
+        }
+    }
+
     public function authorize(): bool
     {
         return $this->user()->hasRole('super-admin') || $this->user()->can('create-queries');
@@ -29,6 +41,8 @@ class StoreSalesQueryRequest extends FormRequest
             'travel_date' => ['nullable', 'date'],
             'travel_month' => ['nullable', 'date_format:Y-m'],
             'number_of_pax' => ['required', 'integer', 'min:1'],
+            'adult_count' => ['nullable', 'integer', 'min:0'],
+            'child_count' => ['nullable', 'integer', 'min:0'],
             'source' => ['required', Rule::in(SalesQuery::SOURCES)],
             'priority' => ['required', Rule::in(SalesQuery::PRIORITIES)],
             'assigned_to' => ['required', 'exists:users,id'],

@@ -80,6 +80,8 @@ class SalesQuery extends Model
         'travel_date',
         'travel_month',
         'number_of_pax',
+        'adult_count',
+        'child_count',
         'source',
         'priority',
         'assigned_by',

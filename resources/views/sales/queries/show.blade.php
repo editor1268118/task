@@ -79,6 +79,8 @@
                                 'Email' => $query->email ?? '-',
                                 'Destination' => $query->destination ?? '-',
                                 'Travel Date' => $query->travel_date?->format('d M Y') ?? '-',
+                                'Adult' => $query->adult_count ?? '-',
+                                'Child' => $query->child_count ?? 0,
                                 'Pax' => $query->number_of_pax ?? '-',
                                 'Age' => $query->age_days.' days',
                             ] as $label => $value)

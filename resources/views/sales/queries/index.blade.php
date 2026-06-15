@@ -73,7 +73,7 @@
 
     .query-register-table {
         width: max-content;
-        min-width: 1360px;
+        min-width: 1480px;
         border-collapse: separate;
         border-spacing: 0;
     }
@@ -194,7 +194,7 @@
         <table class="table table-sm table-hover align-middle mb-0 query-register-table">
             <thead class="table-light">
                 <tr>
-                    <th class="query-no-cell">Query No</th><th>Query Date</th><th>Query Details</th><th>Service Type</th><th>Client Name</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Travel Date</th><th>Pax</th><th>Source</th><th>Assigned By</th><th>Assigned To</th><th>Priority</th><th>Stage</th><th>Status</th><th>Last Follow-Up</th><th>Next Follow-Up</th><th>Latest Remark</th><th>Age</th><th>Created</th>@role('super-admin')<th>Action</th>@endrole
+                    <th class="query-no-cell">Query No</th><th>Query Date</th><th>Query Details</th><th>Service Type</th><th>Client Name</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Travel Date</th><th>Adult</th><th>Child</th><th>Pax</th><th>Source</th><th>Assigned By</th><th>Assigned To</th><th>Priority</th><th>Stage</th><th>Status</th><th>Last Follow-Up</th><th>Next Follow-Up</th><th>Latest Remark</th><th>Age</th><th>Created</th>@role('super-admin')<th>Action</th>@endrole
                 </tr>
             </thead>
             <tbody>
@@ -209,6 +209,8 @@
                         <td>{{ $query->mobile }}</td>
                         <td><span class="query-cell-truncate" title="{{ $query->destination ?? '-' }}">{{ $query->destination ?? '-' }}</span></td>
                         <td>{{ $query->travel_date?->format('d M Y') ?? '-' }}</td>
+                        <td>{{ $query->adult_count ?? '-' }}</td>
+                        <td>{{ $query->child_count ?? 0 }}</td>
                         <td>{{ $query->number_of_pax ?? '-' }}</td>
                         <td>{{ $query->source }}</td>
                         <td><span class="query-cell-truncate" title="{{ $query->assignedBy?->name ?? '-' }}">{{ $query->assignedBy?->name ?? '-' }}</span></td>
@@ -232,7 +234,7 @@
                         @endrole
                     </tr>
                 @empty
-                    <tr><td colspan="{{ auth()->user()->hasRole('super-admin') ? 22 : 21 }}" class="text-center text-muted py-4">No queries found.</td></tr>
+                    <tr><td colspan="{{ auth()->user()->hasRole('super-admin') ? 24 : 23 }}" class="text-center text-muted py-4">No queries found.</td></tr>
                 @endforelse
             </tbody>
         </table>

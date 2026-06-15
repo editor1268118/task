@@ -72,8 +72,18 @@
         <input type="date" name="travel_date" class="form-control" value="{{ old('travel_date', $queryModel?->travel_date?->format('Y-m-d')) }}">
     </div>
     <div class="col-md-2">
-        <label class="form-label">Pax <span class="text-danger">*</span></label>
-        <input type="number" min="1" name="number_of_pax" class="form-control @error('number_of_pax') is-invalid @enderror" value="{{ old('number_of_pax', $queryModel?->number_of_pax) }}" required>
+        <label class="form-label">Adult <span class="text-danger">*</span></label>
+        <input type="number" min="0" name="adult_count" id="adult_count" class="form-control @error('adult_count') is-invalid @enderror" value="{{ old('adult_count', $queryModel?->adult_count ?? $queryModel?->number_of_pax ?? 1) }}" required>
+        @error('adult_count')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Child</label>
+        <input type="number" min="0" name="child_count" id="child_count" class="form-control @error('child_count') is-invalid @enderror" value="{{ old('child_count', $queryModel?->child_count ?? 0) }}">
+        @error('child_count')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Total Pax <span class="text-danger">*</span></label>
+        <input type="number" min="1" name="number_of_pax" id="number_of_pax" class="form-control @error('number_of_pax') is-invalid @enderror" value="{{ old('number_of_pax', $queryModel?->number_of_pax ?? 1) }}" readonly required>
         @error('number_of_pax')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
@@ -139,3 +149,27 @@
     <button class="btn btn-primary">Save Query</button>
     <a href="{{ route('sales.queries.index') }}" class="btn btn-outline-secondary">Cancel</a>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const adultInput = document.getElementById('adult_count');
+        const childInput = document.getElementById('child_count');
+        const paxInput = document.getElementById('number_of_pax');
+
+        if (!adultInput || !childInput || !paxInput) {
+            return;
+        }
+
+        function syncPax() {
+            const adults = Math.max(0, parseInt(adultInput.value || '0', 10));
+            const children = Math.max(0, parseInt(childInput.value || '0', 10));
+            paxInput.value = adults + children;
+        }
+
+        adultInput.addEventListener('input', syncPax);
+        childInput.addEventListener('input', syncPax);
+        syncPax();
+    });
+</script>
+@endpush
