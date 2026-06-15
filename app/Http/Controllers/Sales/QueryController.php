@@ -298,7 +298,8 @@ class QueryController extends Controller
 
         abort_unless(
             $user->hasRole('super-admin')
-            || ($user->hasAnyRole(['manager', 'employee']) && $user->can('view-queries')),
+            || $user->can('view-queries')
+            || $user->can('create-queries'),
             403
         );
     }

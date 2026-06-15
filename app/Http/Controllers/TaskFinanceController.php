@@ -53,7 +53,7 @@ class TaskFinanceController extends Controller
 
     public function approveReceipt(CustomerReceipt $receipt)
     {
-        abort_unless(Auth::user()->hasRole('super-admin'), 403);
+        abort_unless(Auth::user()->hasRole('super-admin') || Auth::user()->can('approve-finance-closure'), 403);
 
         if ($receipt->task->final_status === Task::FINAL_CLOSED && !Auth::user()->hasRole('super-admin')) {
             return back()->with('error', 'This task is closed. Only Super Admin can unlock or change closed finance records.');
@@ -66,7 +66,7 @@ class TaskFinanceController extends Controller
 
     public function approveVendorPayment(VendorPayment $payment)
     {
-        abort_unless(Auth::user()->hasRole('super-admin'), 403);
+        abort_unless(Auth::user()->hasRole('super-admin') || Auth::user()->can('approve-finance-closure'), 403);
 
         if ($payment->task->final_status === Task::FINAL_CLOSED && !Auth::user()->hasRole('super-admin')) {
             return back()->with('error', 'This task is closed. Only Super Admin can unlock or change closed finance records.');

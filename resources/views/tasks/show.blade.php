@@ -424,7 +424,7 @@
                                             <td>{{ $entry['entered_by'] }}</td>
                                             <td>{{ $entry['created_at']?->timezone(config('app.display_timezone'))->format('d M Y h:i A') ?? '-' }}</td>
                                             <td class="text-end">
-                                                @if(auth()->user()->hasRole('super-admin') && !in_array($entry['status'], ['approved', 'received', 'paid'], true))
+                                                @if((auth()->user()->hasRole('super-admin') || auth()->user()->can('approve-finance-closure')) && !in_array($entry['status'], ['approved', 'received', 'paid'], true))
                                                     @if($entry['transaction_type'] === 'Receipt')
                                                         <form action="{{ route('finance.receipts.approve', $entry['model']) }}" method="POST" class="d-inline">
                                                             @csrf

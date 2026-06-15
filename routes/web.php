@@ -95,7 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('sales')
-        ->middleware('permission:view-queries|create-queries')
+        ->middleware('role_or_permission:super-admin|view-queries|create-queries')
         ->name('sales.')
         ->group(function () {
             Route::get('queries/dashboard', [QueryController::class, 'dashboard'])->name('queries.dashboard');
