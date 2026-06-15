@@ -133,14 +133,14 @@ class TaskPolicy
         return $task->final_status !== Task::FINAL_CLOSED
             && !$task->finance_approved_at
             && $task->isFinanceRelevant()
-            && $user->hasRole('super-admin');
+            && ($user->hasRole('super-admin') || $user->can('approve-finance-closure'));
     }
 
     public function approveManagement(User $user, Task $task)
     {
         return $task->final_status !== Task::FINAL_CLOSED
             && $task->finance_approved_at
-            && $user->hasAnyRole(['super-admin', 'manager']);
+            && ($user->hasRole('super-admin') || $user->can('approve-finance-closure'));
     }
 
     /**
