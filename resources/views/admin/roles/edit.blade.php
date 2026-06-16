@@ -55,6 +55,7 @@
                                 $permissionLabel = match ($permission->name) {
                                     'create-queries' => 'Register Query',
                                     'view-queries' => 'View Query Register',
+                                    'convert-queries' => 'Convert Query To Task',
                                     'create-tasks' => 'Create Task',
                                     default => Str::headline(str_replace('-', ' ', $permission->name)),
                                 };

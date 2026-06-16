@@ -37,7 +37,7 @@
                 </a>
             </li>
 
-            @if(auth()->user()->hasRole('super-admin') || auth()->user()->canAny(['view-queries', 'create-queries']))
+            @if(auth()->user()->hasRole('super-admin') || auth()->user()->canAny(['view-queries', 'create-queries', 'convert-queries']))
                 <li class="nav-section">
                     <span class="nav-section-title">Sales</span>
                 </li>

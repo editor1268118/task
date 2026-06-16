@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Permission;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
 use Illuminate\Http\Request;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleController extends Controller
 {
@@ -39,6 +40,7 @@ class RoleController extends Controller
         if ($request->has('permissions')) {
             $role->syncPermissions($request->permissions);
         }
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role created successfully.');
@@ -76,6 +78,7 @@ class RoleController extends Controller
         } else {
             $role->syncPermissions([]);
         }
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role updated successfully.');
@@ -95,6 +98,7 @@ class RoleController extends Controller
         }
 
         $role->delete();
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
 
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role deleted successfully.');

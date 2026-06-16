@@ -7,7 +7,7 @@
 @section('page-actions')
 <div class="d-flex gap-2">
     <a href="{{ route('sales.queries.edit', $query) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-    @if($query->canConvert())
+    @if($query->canConvert() && (auth()->user()->hasRole('super-admin') || auth()->user()->can('convert-queries')))
         <form action="{{ route('sales.queries.convert', $query) }}" method="POST">
             @csrf
             <button class="btn btn-sm btn-success" onclick="return confirm('Convert this confirmed query to a task?')">Convert To Task</button>

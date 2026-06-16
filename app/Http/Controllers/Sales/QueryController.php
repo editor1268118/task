@@ -192,7 +192,7 @@ class QueryController extends Controller
     public function convert(SalesQuery $query)
     {
         $this->authorizeQuery($query);
-        abort_unless(Auth::user()->hasAnyRole(['super-admin', 'manager']), 403);
+        $this->authorizeConvert();
 
         try {
             $task = $this->queries->convertToTask($query, Auth::user());
@@ -300,7 +300,8 @@ class QueryController extends Controller
         abort_unless(
             $user->hasRole('super-admin')
             || $user->can('view-queries')
-            || $user->can('create-queries'),
+            || $user->can('create-queries')
+            || $user->can('convert-queries'),
             403
         );
     }
@@ -308,6 +309,11 @@ class QueryController extends Controller
     private function authorizeCreate(): void
     {
         abort_unless(Auth::user()->hasRole('super-admin') || Auth::user()->can('create-queries'), 403);
+    }
+
+    private function authorizeConvert(): void
+    {
+        abort_unless(Auth::user()->hasRole('super-admin') || Auth::user()->can('convert-queries'), 403);
     }
 
     private function authorizeQuery(SalesQuery $query): void
