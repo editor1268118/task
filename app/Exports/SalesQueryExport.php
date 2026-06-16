@@ -17,7 +17,6 @@ class SalesQueryExport implements FromCollection, WithHeadings
         return [
             'Query No',
             'Query Date',
-            'Query Time',
             'Service Type',
             'Client Name',
             'Company',
@@ -35,6 +34,7 @@ class SalesQueryExport implements FromCollection, WithHeadings
             'Status',
             'Last Follow-Up',
             'Next Follow-Up',
+            'Follow-Up Time',
             'Latest Remark',
             'Age',
             'Created Date',
@@ -46,7 +46,6 @@ class SalesQueryExport implements FromCollection, WithHeadings
         return $this->queries->map(fn ($query) => [
             $query->query_no,
             $query->query_date?->format('d M Y'),
-            $query->formatted_query_time,
             $query->effective_service_type,
             $query->client_name,
             $query->company_name,
@@ -64,6 +63,7 @@ class SalesQueryExport implements FromCollection, WithHeadings
             $query->status,
             $query->last_followup_date?->format('d M Y'),
             $query->next_followup_date?->format('d M Y'),
+            $query->formatted_next_followup_time,
             $query->latest_remark,
             $query->age_days . ' days',
             $query->created_at?->timezone(config('app.display_timezone'))->format('d M Y h:i A'),

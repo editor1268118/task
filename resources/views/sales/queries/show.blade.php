@@ -72,7 +72,6 @@
                         <div class="row g-3">
                             @foreach([
                                 'Query Date' => $query->query_date?->format('d M Y'),
-                                'Query Time' => $query->formatted_query_time,
                                 'Query Details' => $query->query_title ?: '-',
                                 'Service' => $query->effective_service_type,
                                 'Company' => $query->company_name ?? '-',
@@ -83,6 +82,8 @@
                                 'Adult' => $query->adult_count ?? '-',
                                 'Child' => $query->child_count ?? 0,
                                 'Pax' => $query->number_of_pax ?? '-',
+                                'Next Follow-Up' => $query->next_followup_date?->format('d M Y') ?? '-',
+                                'Follow-Up Time' => $query->formatted_next_followup_time,
                                 'Age' => $query->age_days.' days',
                             ] as $label => $value)
                                 <div class="col-md-4">
@@ -199,8 +200,9 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2"><input type="date" name="followup_date" value="{{ now()->format('Y-m-d') }}" class="form-control" required></div>
-                                <div class="col-md-2"><input type="date" name="next_followup_date" class="form-control"></div>
-                                <div class="col-md-4"><input name="remarks" class="form-control" placeholder="Follow-up remarks" required></div>
+                                <div class="col-md-2"><input type="date" name="next_followup_date" class="form-control" title="Next follow-up date"></div>
+                                <div class="col-md-2"><input type="time" name="next_followup_time" class="form-control" title="Next follow-up time"></div>
+                                <div class="col-md-2"><input name="remarks" class="form-control" placeholder="Follow-up remarks" required></div>
                                 <div class="col-md-2"><button class="btn btn-primary w-100">Add</button></div>
                             </div>
                         </form>
@@ -208,7 +210,7 @@
                             <div class="border-bottom py-2">
                                 <strong>{{ $followup->followup_date->format('d M Y') }}</strong> by {{ $followup->creator?->name ?? '-' }}
                                 <div>{{ $followup->remarks }}</div>
-                                <small class="text-muted">Next: {{ $followup->next_followup_date?->format('d M Y') ?? '-' }}</small>
+                                <small class="text-muted">Next: {{ $followup->next_followup_date?->format('d M Y') ?? '-' }} {{ $followup->next_followup_time ? \Illuminate\Support\Carbon::parse($followup->next_followup_time)->format('h:i A') : '' }}</small>
                             </div>
                         @empty
                             <p class="text-muted">No follow-ups added.</p>
@@ -246,6 +248,7 @@
                 <div class="d-flex justify-content-between mb-2"><span>Stage</span><strong>{{ $query->stage }}</strong></div>
                 <div class="d-flex justify-content-between mb-2"><span>Assigned To</span><strong>{{ $query->assignedTo?->name ?? 'Unassigned' }}</strong></div>
                 <div class="d-flex justify-content-between"><span>Next Follow-Up</span><strong>{{ $query->next_followup_date?->format('d M Y') ?? '-' }}</strong></div>
+                <div class="d-flex justify-content-between"><span>Follow-Up Time</span><strong>{{ $query->formatted_next_followup_time }}</strong></div>
             </div>
         </div>
 
@@ -276,6 +279,8 @@
                     </select>
                     <label class="form-label small">Next Follow-Up</label>
                     <input type="date" name="next_followup_date" value="{{ $query->next_followup_date?->format('Y-m-d') }}" class="form-control mb-2">
+                    <label class="form-label small">Follow-Up Time</label>
+                    <input type="time" name="next_followup_time" value="{{ $query->next_followup_time ? substr($query->next_followup_time, 0, 5) : '' }}" class="form-control mb-2">
                     <label class="form-label small">Remarks</label>
                     <textarea name="latest_remark" class="form-control mb-2" rows="2">{{ $query->latest_remark }}</textarea>
                     <button class="btn btn-primary w-100">Update Query</button>

@@ -29,7 +29,6 @@ class StoreSalesQueryRequest extends FormRequest
     {
         return [
             'query_date' => ['required', 'date'],
-            'query_time' => ['nullable', 'date_format:H:i'],
             'query_title' => ['required', 'string', 'max:255'],
             'service_type' => ['required', Rule::in(SalesQuery::SERVICE_TYPES)],
             'service_type_other' => ['nullable', 'string', 'max:255'],
@@ -50,6 +49,7 @@ class StoreSalesQueryRequest extends FormRequest
             'stage' => ['required', Rule::in(SalesQuery::STAGES)],
             'status' => ['required', Rule::in(['Open', 'Confirmed', 'Lost', 'Cancelled'])],
             'next_followup_date' => ['nullable', 'required_if:stage,Follow Up,Pricing Shared,Negotiation', 'date'],
+            'next_followup_time' => ['nullable', 'date_format:H:i'],
             'lost_reason' => ['nullable', 'required_if:status,Lost', Rule::in(SalesQuery::LOST_REASONS)],
             'latest_remark' => ['nullable', 'string', 'max:5000'],
             'duplicate_confirmed' => ['nullable', 'boolean'],

@@ -12,6 +12,7 @@ class QueryFollowup extends Model
         'followup_date',
         'remarks',
         'next_followup_date',
+        'next_followup_time',
         'created_by',
     ];
 

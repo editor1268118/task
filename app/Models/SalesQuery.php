@@ -70,7 +70,6 @@ class SalesQuery extends Model
         'query_title',
         'customer_id',
         'query_date',
-        'query_time',
         'service_type',
         'service_type_other',
         'client_name',
@@ -92,6 +91,7 @@ class SalesQuery extends Model
         'status',
         'last_followup_date',
         'next_followup_date',
+        'next_followup_time',
         'lost_reason',
         'latest_remark',
         'converted_task_id',
@@ -175,9 +175,9 @@ class SalesQuery extends Model
             : $this->service_type;
     }
 
-    public function getFormattedQueryTimeAttribute(): string
+    public function getFormattedNextFollowupTimeAttribute(): string
     {
-        return $this->query_time ? Carbon::parse($this->query_time)->format('h:i A') : '-';
+        return $this->next_followup_time ? Carbon::parse($this->next_followup_time)->format('h:i A') : '-';
     }
 
     public function getAgeDaysAttribute(): int

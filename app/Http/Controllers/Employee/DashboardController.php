@@ -19,6 +19,11 @@ class DashboardController extends Controller
     public function index(ReportService $reportService)
     {
         $user = Auth::user();
+        $myQueries = fn () => SalesQuery::where(function ($query) use ($user) {
+            $query->where('assigned_to', $user->id)
+                ->orWhere('created_by', $user->id)
+                ->orWhere('assigned_by', $user->id);
+        });
 
         $stats = [
             'my_tasks'        => Task::assignedTo($user->id)->count(),
@@ -26,9 +31,9 @@ class DashboardController extends Controller
             'pending_tasks'   => Task::assignedTo($user->id)->status(Task::STATUS_PENDING)->count(),
             'completed_tasks' => Task::assignedTo($user->id)->where('final_status', Task::FINAL_CLOSED)->count(),
             'overdue_tasks'   => Task::assignedTo($user->id)->overdue()->count(),
-            'my_followups_today' => SalesQuery::where('assigned_to', $user->id)->where('status', 'Open')->whereDate('next_followup_date', today())->count(),
-            'upcoming_followups' => SalesQuery::where('assigned_to', $user->id)->where('status', 'Open')->whereDate('next_followup_date', '>', today())->count(),
-            'missed_followups' => SalesQuery::where('assigned_to', $user->id)->where('status', 'Open')->whereDate('next_followup_date', '<', today())->count(),
+            'my_followups_today' => $myQueries()->where('status', 'Open')->whereDate('next_followup_date', today())->count(),
+            'upcoming_followups' => $myQueries()->where('status', 'Open')->whereDate('next_followup_date', '>', today())->count(),
+            'missed_followups' => $myQueries()->where('status', 'Open')->whereDate('next_followup_date', '<', today())->count(),
         ];
 
         $chartData = $reportService->getDashboardChartsData(null, $user->id);

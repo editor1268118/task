@@ -20,6 +20,7 @@ class StoreQueryFollowupRequest extends FormRequest
             'followup_date' => ['required', 'date'],
             'remarks' => ['required', 'string', 'max:5000'],
             'next_followup_date' => ['nullable', 'date', 'after_or_equal:followup_date'],
+            'next_followup_time' => ['nullable', 'date_format:H:i'],
         ];
     }
 }

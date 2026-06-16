@@ -25,7 +25,7 @@
             <div class="col-md-2"><button class="btn btn-sm btn-primary w-100">Run Report</button></div>
         </form>
         <table class="table table-sm align-middle">
-            <thead class="table-light"><tr><th>Query</th><th>Client</th><th>Service</th><th>Source</th><th>Employee</th><th>Status</th><th>Next Follow-Up</th></tr></thead>
+            <thead class="table-light"><tr><th>Query</th><th>Client</th><th>Service</th><th>Source</th><th>Employee</th><th>Status</th><th>Next Follow-Up</th><th>Time</th></tr></thead>
             <tbody>
                 @forelse($queries as $query)
                     <tr>
@@ -36,6 +36,7 @@
                         <td>{{ $query->assignedTo?->name ?? '-' }}</td>
                         <td>{{ $query->status }}</td>
                         <td>{{ $query->next_followup_date?->format('d M Y') ?? '-' }}</td>
+                        <td>{{ $query->formatted_next_followup_time }}</td>
                     </tr>
                 @empty
                     <tr><td colspan="8" class="text-center text-muted py-4">No report data.</td></tr>

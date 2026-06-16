@@ -32,7 +32,11 @@ class QueryManagementService
             ->withCount('followups');
 
         if ($user->hasRole('employee')) {
-            $query->where('assigned_to', $user->id);
+            $query->where(function ($q) use ($user) {
+                $q->where('assigned_to', $user->id)
+                    ->orWhere('created_by', $user->id)
+                    ->orWhere('assigned_by', $user->id);
+            });
         } elseif ($user->hasRole('manager')) {
             $teamIds = User::where('department_id', $user->department_id)->pluck('id');
             $query->where(function ($q) use ($user, $teamIds) {
@@ -101,7 +105,6 @@ class QueryManagementService
             $data['updated_by'] = $user->id;
             $data['assigned_by'] = $data['assigned_by'] ?? $user->id;
             $data['query_date'] = $data['query_date'] ?? today();
-            $data['query_time'] = $data['query_time'] ?? now()->format('H:i');
             $data['travel_month'] = $this->travelMonth($data);
             $data['customer_id'] = $data['customer_id'] ?? $this->resolveCustomer($data, $user)->id;
 
@@ -161,12 +164,14 @@ class QueryManagementService
                 'followup_date' => $data['followup_date'],
                 'remarks' => $data['remarks'],
                 'next_followup_date' => $data['next_followup_date'] ?? null,
+                'next_followup_time' => $data['next_followup_time'] ?? null,
                 'created_by' => $user->id,
             ]);
 
             $query->update([
                 'last_followup_date' => $followup->followup_date,
                 'next_followup_date' => $followup->next_followup_date,
+                'next_followup_time' => $followup->next_followup_time,
                 'latest_remark' => $followup->remarks,
                 'updated_by' => $user->id,
                 'stage' => $query->stage === 'New Query' ? 'Follow Up' : $query->stage,
@@ -176,6 +181,7 @@ class QueryManagementService
                 'followup_id' => $followup->id,
                 'discussion_type' => $data['discussion_type'] ?? 'Follow-Up',
                 'next_followup_date' => $followup->next_followup_date?->toDateString(),
+                'next_followup_time' => $followup->next_followup_time,
             ]);
 
             $query->discussions()->create([

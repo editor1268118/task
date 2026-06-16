@@ -18,7 +18,7 @@
         <div class="card-header bg-white"><strong>{{ $title }}</strong></div>
         <div class="card-body p-0">
             <table class="table mb-0 align-middle">
-                <thead class="table-light"><tr><th>Query</th><th>Client</th><th>Assigned To</th><th>Next Follow-Up</th><th>Stage</th><th>Status</th></tr></thead>
+                <thead class="table-light"><tr><th>Query</th><th>Client</th><th>Assigned To</th><th>Next Follow-Up</th><th>Time</th><th>Stage</th><th>Status</th></tr></thead>
                 <tbody>
                     @forelse($items as $query)
                         <tr>
@@ -26,11 +26,12 @@
                             <td>{{ $query->client_name }}</td>
                             <td>{{ $query->assignedTo?->name ?? '-' }}</td>
                             <td>{{ $query->next_followup_date?->format('d M Y') }}</td>
+                            <td>{{ $query->formatted_next_followup_time }}</td>
                             <td>{{ $query->stage }}</td>
                             <td>{{ $query->status }}</td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="text-center text-muted py-3">No records.</td></tr>
+                        <tr><td colspan="7" class="text-center text-muted py-3">No records.</td></tr>
                     @endforelse
                 </tbody>
             </table>

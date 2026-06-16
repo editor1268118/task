@@ -21,11 +21,6 @@
         @error('query_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
-        <label class="form-label">Query Time</label>
-        <input type="time" name="query_time" class="form-control @error('query_time') is-invalid @enderror" value="{{ old('query_time', $queryModel?->query_time ? substr($queryModel->query_time, 0, 5) : now()->format('H:i')) }}">
-        @error('query_time')<div class="invalid-feedback">{{ $message }}</div>@enderror
-    </div>
-    <div class="col-md-3">
         <label class="form-label">Query Details <span class="text-danger">*</span></label>
         <input name="query_title" class="form-control @error('query_title') is-invalid @enderror" value="{{ old('query_title', $queryModel?->query_title) }}" placeholder="e.g. Goa family package for 4 pax" required>
         @error('query_title')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -128,11 +123,16 @@
         </select>
         @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <label class="form-label">Next Follow-Up</label>
         <input type="date" name="next_followup_date" class="form-control @error('next_followup_date') is-invalid @enderror" value="{{ old('next_followup_date', $queryModel?->next_followup_date?->format('Y-m-d')) }}">
         <small class="text-muted">Required for Follow Up, Pricing Shared, Negotiation.</small>
         @error('next_followup_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Follow-Up Time</label>
+        <input type="time" name="next_followup_time" class="form-control @error('next_followup_time') is-invalid @enderror" value="{{ old('next_followup_time', $queryModel?->next_followup_time ? substr($queryModel->next_followup_time, 0, 5) : '') }}">
+        @error('next_followup_time')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
         <label class="form-label">Lost Reason</label>

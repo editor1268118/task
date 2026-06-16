@@ -165,6 +165,7 @@ class QueryController extends Controller
             'status' => ['required', 'in:' . implode(',', ['Open', 'Confirmed', 'Lost', 'Cancelled'])],
             'latest_remark' => ['nullable', 'string', 'max:5000'],
             'next_followup_date' => ['nullable', 'date'],
+            'next_followup_time' => ['nullable', 'date_format:H:i'],
             'lost_reason' => ['nullable', 'required_if:status,Lost', 'in:' . implode(',', SalesQuery::LOST_REASONS)],
         ]);
 
@@ -317,7 +318,12 @@ class QueryController extends Controller
         }
 
         if ($user->hasRole('employee')) {
-            abort_unless($query->assigned_to === $user->id, 403);
+            abort_unless(
+                $query->assigned_to === $user->id
+                || $query->created_by === $user->id
+                || $query->assigned_by === $user->id,
+                403
+            );
         }
 
         if ($user->hasRole('manager')) {
