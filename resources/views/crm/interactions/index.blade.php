@@ -24,7 +24,15 @@
                     <tr>
                         <td>{{ $interaction->interaction_date->format('d M Y h:i A') }}</td>
                         <td><span class="badge bg-light text-dark border">{{ $interaction->interaction_type }}</span></td>
-                        <td><a href="{{ route('crm.customers.show', $interaction->customer) }}">{{ $interaction->customer->company_name ?? $interaction->customer->contact_person }}</a></td>
+                        <td>
+                            @if($interaction->customer)
+                                <a href="{{ route('crm.customers.show', $interaction->customer) }}">
+                                    {{ $interaction->customer->company_name ?? $interaction->customer->contact_person ?? 'Unnamed Customer' }}
+                                </a>
+                            @else
+                                <span class="text-muted">Customer unavailable</span>
+                            @endif
+                        </td>
                         <td>@if($interaction->task)<a href="{{ route('tasks.show', $interaction->task) }}">{{ $interaction->task->task_no }}</a>@else - @endif</td>
                         <td>{{ Str::limit($interaction->notes, 80) }}</td>
                         <td>{{ $interaction->next_followup_date?->format('d M Y') ?? '-' }}</td>

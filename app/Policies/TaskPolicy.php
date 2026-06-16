@@ -37,8 +37,8 @@ class TaskPolicy
         }
 
         if ($user->hasRole('employee')) {
-            // Employee can only view tasks assigned to them
-            return $user->id === $task->assigned_to;
+            // Employee can view tasks assigned to them and tasks they created/assigned.
+            return $user->id === $task->assigned_to || $user->id === $task->assigned_by;
         }
 
         return false;

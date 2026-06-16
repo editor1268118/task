@@ -42,7 +42,10 @@ class TaskController extends Controller
 
         // Apply Role-Based Filtering First
         if ($user->hasRole('employee')) {
-            $query->where('assigned_to', $user->id);
+            $query->where(function ($q) use ($user) {
+                $q->where('assigned_to', $user->id)
+                    ->orWhere('assigned_by', $user->id);
+            });
         } elseif ($user->hasRole('manager')) {
             $query->where('department_id', $user->department_id);
         } elseif ($user->hasRole('finance')) {

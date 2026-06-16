@@ -19,6 +19,10 @@ class DashboardController extends Controller
     public function index(ReportService $reportService)
     {
         $user = Auth::user();
+        $myTasks = fn () => Task::where(function ($query) use ($user) {
+            $query->where('assigned_to', $user->id)
+                ->orWhere('assigned_by', $user->id);
+        });
         $myQueries = fn () => SalesQuery::where(function ($query) use ($user) {
             $query->where('assigned_to', $user->id)
                 ->orWhere('created_by', $user->id)
@@ -26,11 +30,11 @@ class DashboardController extends Controller
         });
 
         $stats = [
-            'my_tasks'        => Task::assignedTo($user->id)->count(),
-            'due_today'       => Task::assignedTo($user->id)->whereDate('due_date', today())->statusNotIn([Task::STATUS_COMPLETED, Task::STATUS_CLOSED, Task::STATUS_CANCELLED])->count(),
-            'pending_tasks'   => Task::assignedTo($user->id)->status(Task::STATUS_PENDING)->count(),
-            'completed_tasks' => Task::assignedTo($user->id)->where('final_status', Task::FINAL_CLOSED)->count(),
-            'overdue_tasks'   => Task::assignedTo($user->id)->overdue()->count(),
+            'my_tasks'        => $myTasks()->count(),
+            'due_today'       => $myTasks()->whereDate('due_date', today())->statusNotIn([Task::STATUS_COMPLETED, Task::STATUS_CLOSED, Task::STATUS_CANCELLED])->count(),
+            'pending_tasks'   => $myTasks()->status(Task::STATUS_PENDING)->count(),
+            'completed_tasks' => $myTasks()->where('final_status', Task::FINAL_CLOSED)->count(),
+            'overdue_tasks'   => $myTasks()->overdue()->count(),
             'my_followups_today' => $myQueries()->where('status', 'Open')->whereDate('next_followup_date', today())->count(),
             'upcoming_followups' => $myQueries()->where('status', 'Open')->whereDate('next_followup_date', '>', today())->count(),
             'missed_followups' => $myQueries()->where('status', 'Open')->whereDate('next_followup_date', '<', today())->count(),
@@ -38,7 +42,7 @@ class DashboardController extends Controller
 
         $chartData = $reportService->getDashboardChartsData(null, $user->id);
 
-        $upcomingTasks = Task::assignedTo($user->id)
+        $upcomingTasks = $myTasks()
             ->statusNotIn([Task::STATUS_COMPLETED, Task::STATUS_CLOSED, Task::STATUS_CANCELLED])
             ->orderBy('due_date', 'asc')
             ->with(['assigner', 'department'])
