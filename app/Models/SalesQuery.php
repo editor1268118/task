@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class SalesQuery extends Model
 {
@@ -69,6 +70,7 @@ class SalesQuery extends Model
         'query_title',
         'customer_id',
         'query_date',
+        'query_time',
         'service_type',
         'service_type_other',
         'client_name',
@@ -171,6 +173,11 @@ class SalesQuery extends Model
         return $this->service_type === 'Other' && $this->service_type_other
             ? $this->service_type_other
             : $this->service_type;
+    }
+
+    public function getFormattedQueryTimeAttribute(): string
+    {
+        return $this->query_time ? Carbon::parse($this->query_time)->format('h:i A') : '-';
     }
 
     public function getAgeDaysAttribute(): int

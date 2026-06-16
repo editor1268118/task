@@ -3,7 +3,7 @@
 @if(session('duplicate_warning'))
     <div class="alert alert-warning">
         <strong>Possible Duplicate Query Found.</strong>
-        <div class="small mb-2">Matching mobile, email, or company exists. Review before continuing.</div>
+        <div class="small mb-2">Matching email or company exists. Mobile numbers can repeat for multiple queries.</div>
         @foreach(session('duplicate_queries', collect()) as $duplicate)
             <div class="small">
                 <a href="{{ route('sales.queries.show', $duplicate) }}">{{ $duplicate->query_no }}</a>
@@ -19,6 +19,11 @@
         <label class="form-label">Query Date <span class="text-danger">*</span></label>
         <input type="date" name="query_date" class="form-control @error('query_date') is-invalid @enderror" value="{{ old('query_date', $queryModel?->query_date?->format('Y-m-d') ?? now()->format('Y-m-d')) }}" required>
         @error('query_date')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Query Time</label>
+        <input type="time" name="query_time" class="form-control @error('query_time') is-invalid @enderror" value="{{ old('query_time', $queryModel?->query_time ? substr($queryModel->query_time, 0, 5) : now()->format('H:i')) }}">
+        @error('query_time')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
     <div class="col-md-3">
         <label class="form-label">Query Details <span class="text-danger">*</span></label>

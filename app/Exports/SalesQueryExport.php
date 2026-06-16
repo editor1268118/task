@@ -17,6 +17,7 @@ class SalesQueryExport implements FromCollection, WithHeadings
         return [
             'Query No',
             'Query Date',
+            'Query Time',
             'Service Type',
             'Client Name',
             'Company',
@@ -45,6 +46,7 @@ class SalesQueryExport implements FromCollection, WithHeadings
         return $this->queries->map(fn ($query) => [
             $query->query_no,
             $query->query_date?->format('d M Y'),
+            $query->formatted_query_time,
             $query->effective_service_type,
             $query->client_name,
             $query->company_name,

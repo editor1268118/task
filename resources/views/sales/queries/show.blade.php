@@ -72,6 +72,7 @@
                         <div class="row g-3">
                             @foreach([
                                 'Query Date' => $query->query_date?->format('d M Y'),
+                                'Query Time' => $query->formatted_query_time,
                                 'Query Details' => $query->query_title ?: '-',
                                 'Service' => $query->effective_service_type,
                                 'Company' => $query->company_name ?? '-',

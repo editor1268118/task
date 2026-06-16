@@ -101,6 +101,7 @@ class QueryManagementService
             $data['updated_by'] = $user->id;
             $data['assigned_by'] = $data['assigned_by'] ?? $user->id;
             $data['query_date'] = $data['query_date'] ?? today();
+            $data['query_time'] = $data['query_time'] ?? now()->format('H:i');
             $data['travel_month'] = $this->travelMonth($data);
             $data['customer_id'] = $data['customer_id'] ?? $this->resolveCustomer($data, $user)->id;
 
@@ -341,11 +342,14 @@ class QueryManagementService
 
     public function duplicates(array $data, ?SalesQuery $ignore = null): Collection
     {
+        if (empty($data['email']) && empty($data['company_name'])) {
+            return collect();
+        }
+
         return SalesQuery::query()
             ->when($ignore, fn ($q) => $q->whereKeyNot($ignore->id))
             ->where(function ($q) use ($data) {
-                $q->when(!empty($data['mobile']), fn ($sub) => $sub->orWhere('mobile', $data['mobile']))
-                    ->when(!empty($data['email']), fn ($sub) => $sub->orWhere('email', $data['email']))
+                $q->when(!empty($data['email']), fn ($sub) => $sub->orWhere('email', $data['email']))
                     ->when(!empty($data['company_name']), fn ($sub) => $sub->orWhere('company_name', $data['company_name']));
             })
             ->latest()

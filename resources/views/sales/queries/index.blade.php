@@ -194,7 +194,7 @@
         <table class="table table-sm table-hover align-middle mb-0 query-register-table">
             <thead class="table-light">
                 <tr>
-                    <th class="query-no-cell">Query No</th><th>Query Date</th><th>Query Details</th><th>Service Type</th><th>Client Name</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Travel Date</th><th>Adult</th><th>Child</th><th>Pax</th><th>Source</th><th>Assigned By</th><th>Assigned To</th><th>Priority</th><th>Stage</th><th>Status</th><th>Last Follow-Up</th><th>Next Follow-Up</th><th>Latest Remark</th><th>Age</th><th>Created</th>@role('super-admin')<th>Action</th>@endrole
+                    <th class="query-no-cell">Query No</th><th>Query Date</th><th>Query Time</th><th>Query Details</th><th>Service Type</th><th>Client Name</th><th>Company</th><th>Mobile</th><th>Destination</th><th>Travel Date</th><th>Adult</th><th>Child</th><th>Pax</th><th>Source</th><th>Assigned By</th><th>Assigned To</th><th>Priority</th><th>Stage</th><th>Status</th><th>Last Follow-Up</th><th>Next Follow-Up</th><th>Latest Remark</th><th>Age</th><th>Created</th>@role('super-admin')<th>Action</th>@endrole
                 </tr>
             </thead>
             <tbody>
@@ -202,6 +202,7 @@
                     <tr>
                         <td class="query-no-cell"><a href="{{ route('sales.queries.show', $query) }}" class="fw-bold">{{ $query->query_no }}</a></td>
                         <td>{{ $query->query_date?->format('d M Y') }}</td>
+                        <td>{{ $query->formatted_query_time }}</td>
                         <td><span class="query-cell-truncate" title="{{ $query->query_title ?? '-' }}">{{ $query->query_title ?? '-' }}</span></td>
                         <td><span class="query-cell-truncate" title="{{ $query->effective_service_type }}">{{ $query->effective_service_type }}</span></td>
                         <td><span class="query-cell-truncate" title="{{ $query->client_name }}">{{ $query->client_name }}</span></td>
@@ -234,7 +235,7 @@
                         @endrole
                     </tr>
                 @empty
-                    <tr><td colspan="{{ auth()->user()->hasRole('super-admin') ? 24 : 23 }}" class="text-center text-muted py-4">No queries found.</td></tr>
+                    <tr><td colspan="{{ auth()->user()->hasRole('super-admin') ? 25 : 24 }}" class="text-center text-muted py-4">No queries found.</td></tr>
                 @endforelse
             </tbody>
         </table>

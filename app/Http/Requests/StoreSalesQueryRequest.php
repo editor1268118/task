@@ -29,6 +29,7 @@ class StoreSalesQueryRequest extends FormRequest
     {
         return [
             'query_date' => ['required', 'date'],
+            'query_time' => ['nullable', 'date_format:H:i'],
             'query_title' => ['required', 'string', 'max:255'],
             'service_type' => ['required', Rule::in(SalesQuery::SERVICE_TYPES)],
             'service_type_other' => ['nullable', 'string', 'max:255'],
